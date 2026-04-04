@@ -1,7 +1,7 @@
 # front end de politica de chat
 
 
-## 📖 Sobre o projeto
+##  Sobre o projeto
 Este projeto é o frontend de uma aplicação de bate-papo focada em discussões de auditoria.
 
 O sistema possui:
