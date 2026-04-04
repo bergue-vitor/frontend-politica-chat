@@ -2,7 +2,7 @@
 
 
 ##  Sobre o projeto
-Este projeto é o frontend de uma aplicação de bate-papo focada em discussões de auditoria.
+Este projeto implementa o frontend de uma aplicação de chat com inteligência artificial especializada em auditoria. O sistema permite que usuários façam perguntas e recebam respostas baseadas exclusivamente nas regras, políticas e documentos internos da empresa, funcionando como um assistente para consulta rápida de normas e procedimentos
 
 O sistema possui:
 - Login e cadastro de usuários
