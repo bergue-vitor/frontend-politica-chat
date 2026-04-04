@@ -1,1 +1,1 @@
-# front end de Politica de chat
+# front end de politica de chat
