@@ -4,9 +4,10 @@ import { UserStatusBadge } from './UserStatusBadge';
 
 interface UsersTableProps {
   users: User[];
+  onEditRole: (user: User) => void;
 }
 
-export function UsersTable({ users }: UsersTableProps) {
+export function UsersTable({ users, onEditRole }: UsersTableProps) {
   return (
     <div className="users-table-wrapper">
       <table className="users-table">
@@ -43,7 +44,13 @@ export function UsersTable({ users }: UsersTableProps) {
               </td>
 
               <td>
-                <button className="edit-role-btn">Editar papel</button>
+                <button
+                  type="button"
+                  className="edit-role-btn"
+                  onClick={() => onEditRole(user)}
+                >
+                  Editar papel
+                </button>
               </td>
             </tr>
           ))}
