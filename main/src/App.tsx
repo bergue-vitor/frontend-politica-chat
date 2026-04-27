@@ -9,6 +9,7 @@ import Chat from './pages/Chat/Chat';
 import AdminUsers from './pages/AdminUsers/AdminUsers';
 import AdminDocuments from './pages/AdminDocuments/AdminDocuments';
 import DocumentTimeline from './pages/DocumentTimeline/DocumentTimeline';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -18,13 +19,50 @@ function App() {
         <Route path="/register" element={<Register />} />
       </Route>
 
-      <Route path="/" element={<DashboardLayout />}>
-        <Route index element={<Navigate to="chat" replace />} />
-        <Route path="chat" element={<Chat />} />
-        <Route path="admin/users" element={<AdminUsers />} />
-        <Route path="admin/documents" element={<AdminDocuments />} />
-        <Route path="document-timeline" element={<DocumentTimeline />} />
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<Navigate to="/chat" replace />} />
+        <Route
+          path="chat"
+          element={
+            <ProtectedRoute allowedRoles={['1', '2']}>
+              <Chat />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/users"
+          element={
+            <ProtectedRoute allowedRoles={['2']}>
+              <AdminUsers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/documents"
+          element={
+            <ProtectedRoute allowedRoles={['2']}>
+              <AdminDocuments />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="document-timeline"
+          element={
+            <ProtectedRoute allowedRoles={['2']}>
+              <DocumentTimeline />
+            </ProtectedRoute>
+          }
+        />
       </Route>
+
+      <Route path="*" element={<Navigate to="/chat" replace />} />
     </Routes>
   );
 }

@@ -1,99 +1,134 @@
-import { useState } from 'react';
-import { MessageSquare, Search, ChevronDown, ChevronRight, Globe, Zap, FileText, Shield } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
+import {
+  ArrowRight,
+  Bot,
+  ChevronDown,
+  FileText,
+  Globe2,
+  Grid2X2,
+  MessageSquare,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  UserCog,
+} from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/sidebar.css';
 
-const historyItems = [
-  { id: 1, title: 'Política de reembolso de vi...' },
-  { id: 2, title: 'Solicitação de férias 2024' },
-  { id: 3, title: 'Uso de VPN fora do país' },
+const conversationHistory = [
+  'Política de reembolso de vi...',
+  'Solicitação de férias 2024',
+  'Uso de VPN fora do país',
 ];
 
 export default function Sidebar() {
-  const [intranetOpen, setIntranetOpen] = useState(true);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [activeHistory, setActiveHistory] = useState<number | null>(null);
+  const { user } = useAuth();
+  const isAdmin = user.role === '2';
 
   return (
-    <aside className="sidebar">
+    <aside className="sidebar" aria-label="Navegação principal">
+      <div className="sidebar-top-icons">
+        <NavLink to="/chat" className="sidebar-brand" aria-label="Ir para o chat">
+          <ShieldCheck size={20} strokeWidth={1.8} />
+        </NavLink>
 
-      {/* Topo */}
-      <div className="sb-top">
-        <div className="sb-logo">
-          <Shield size={16} />
-        </div>
-        <button className="sb-icon-btn" title="Nova conversa">
-          <MessageSquare size={15} />
-        </button>
+        <NavLink to="/chat" className="sidebar-chat-icon" aria-label="Conversas">
+          <MessageSquare size={19} strokeWidth={1.8} />
+        </NavLink>
       </div>
 
-      {/* Fontes da Empresa */}
-      <div className="sb-section">
-        <div className="sb-section-header">
-          <span className="sb-section-label">Fontes da Empresa</span>
-          <button className="sb-icon-btn-sm" title="Gerenciar fontes">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-              <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-            </svg>
-          </button>
-        </div>
+      <div className="sidebar-divider" />
 
-        <button className="sb-item">
-          <Search size={13} className="sb-item-icon muted" />
-          <span>Pesquise novas fontes na intranet</span>
-        </button>
+      <section className="sidebar-section sidebar-sources">
+        <NavLink
+          to={isAdmin ? '/admin/documents' : '/chat'}
+          className="sidebar-section-header sidebar-section-header-link"
+          aria-label={isAdmin ? 'Ir para políticas e normas' : 'Fontes da empresa'}
+        >
+          <h2>Fontes da Empresa</h2>
+          <Grid2X2 size={17} strokeWidth={1.8} />
+        </NavLink>
 
-        <div className="sb-group">
-          <button className="sb-group-btn" onClick={() => setIntranetOpen(o => !o)}>
-            <div className="sb-group-left">
-              <Globe size={13} className="sb-item-icon blue" />
-              <span>Intranet</span>
-            </div>
-            <ChevronDown size={12} className={`sb-chevron ${intranetOpen ? 'open' : ''}`} />
-          </button>
-        </div>
+        {isAdmin && (
+          <NavLink to="/admin/documents" className="sidebar-add-source">
+            <span aria-hidden="true">+</span>
+            Adicionar políticas/normas
+          </NavLink>
+        )}
+      </section>
 
-        <div className="sb-group">
-          <button className="sb-group-btn" onClick={() => setSearchOpen(o => !o)}>
-            <div className="sb-group-left">
-              <Zap size={13} className="sb-item-icon yellow" />
-              <span>Pesquisa rápida</span>
-            </div>
-            <div className="sb-group-right">
-              <ChevronDown size={12} className={`sb-chevron ${searchOpen ? 'open' : ''}`} />
-              <span className="sb-arrow-btn" onClick={e => e.stopPropagation()}>
-                <ChevronRight size={12} />
-              </span>
-            </div>
-          </button>
-        </div>
-      </div>
+      {isAdmin && (
+        <section className="sidebar-admin-panel" aria-label="Administração">
+          <p className="sidebar-kicker">Administração</p>
 
-      {/* Histórico de Conversas */}
-      <div className="sb-section">
-        <div className="sb-section-header">
-          <span className="sb-section-label">Histórico de Conversas</span>
-        </div>
-        <div className="sb-history-list">
-          {historyItems.map(item => (
-            <button
-              key={item.id}
-              className={`sb-item ${activeHistory === item.id ? 'active' : ''}`}
-              onClick={() => setActiveHistory(item.id)}
-            >
-              <MessageSquare size={13} className="sb-item-icon muted" />
-              <span className="sb-history-title">{item.title}</span>
-            </button>
+          <nav className="sidebar-admin-nav">
+            <NavLink to="/admin/documents" className="sidebar-admin-link">
+              <FileText size={17} strokeWidth={1.8} />
+              Gestão de Documentos
+            </NavLink>
+
+            <NavLink to="/admin/users" className="sidebar-admin-link">
+              <UserCog size={17} strokeWidth={1.8} />
+              Gerenciamento de Usuários
+            </NavLink>
+          </nav>
+
+          <SourceSearch />
+        </section>
+      )}
+
+      {!isAdmin && <SourceSearch />}
+
+      <section className="sidebar-history" aria-label="Histórico de conversas">
+        <p className="sidebar-kicker">Histórico de Conversas</p>
+
+        <nav className="sidebar-history-list">
+          {conversationHistory.slice(0, isAdmin ? 1 : 3).map((item) => (
+            <NavLink to="/chat" className="sidebar-history-link" key={item}>
+              <MessageSquare size={17} strokeWidth={1.8} />
+              <span>{item}</span>
+            </NavLink>
           ))}
+        </nav>
+      </section>
+
+      <div className="sidebar-saved-empty">
+        <div className="sidebar-saved-icon">
+          <FileText size={23} strokeWidth={1.8} />
         </div>
+        <p>As políticas salvas vão aparecer aqui.</p>
       </div>
-
-      {/* Políticas Salvas */}
-      <div className="sb-policies">
-        <FileText size={22} className="sb-policies-icon" />
-        <p className="sb-policies-text">As políticas salvas vão aparecer aqui.</p>
-      </div>
-
     </aside>
+  );
+}
+
+function SourceSearch() {
+  return (
+    <section className="sidebar-search-card" aria-label="Pesquisar fontes">
+      <label className="sidebar-search-field">
+        <Search size={17} strokeWidth={1.8} />
+        <span>Pesquise novas fontes na intranet</span>
+      </label>
+
+      <div className="sidebar-search-actions">
+        <button type="button" className="sidebar-filter-button">
+          <Globe2 size={15} strokeWidth={1.8} />
+          Intranet
+          <ChevronDown size={14} strokeWidth={1.8} />
+        </button>
+
+        <button type="button" className="sidebar-filter-button">
+          <Sparkles size={15} strokeWidth={1.8} />
+          Pesquisa rápida
+          <ChevronDown size={14} strokeWidth={1.8} />
+        </button>
+
+        <button type="button" className="sidebar-go-button" aria-label="Pesquisar">
+          <ArrowRight size={16} strokeWidth={1.9} />
+        </button>
+      </div>
+
+      <Bot className="sidebar-search-watermark" size={20} strokeWidth={1.6} />
+    </section>
   );
 }
