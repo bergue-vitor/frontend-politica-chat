@@ -27,7 +27,7 @@ function App() {
           </ProtectedRoute>
         }
       >
-        <Route index element={<Navigate to="/chat" replace />} />
+        <Route index element={<Navigate to="/login" replace />} />
         <Route
           path="chat"
           element={

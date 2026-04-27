@@ -26,7 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     role: '2', 
   });
 
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   function loginAsAdmin() {
     setUser({

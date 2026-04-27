@@ -7,7 +7,7 @@ export default function Login() {
 
   function handleLoginAdmin() {
     loginAsAdmin();
-    navigate('/admin/users');
+    navigate('/chat');
   }
 
   function handleLoginUser() {
