@@ -1,10 +1,227 @@
 .sidebar {
-  width: 250px;
-  min-height: 100vh;
-  background: #08111f;
-  color: white;
+  width: 220px;
+  min-width: 220px;
+  height: 100vh;
+  background: #060e1a;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Topo */
+.sb-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 12px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sb-logo {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  width: 30px;
+  height: 30px;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 8px;
+  color: #3b82f6;
+}
+
+.sb-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  color: #475569;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sb-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #94a3b8;
+}
+
+.sb-icon-btn-sm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  color: #2d3f55;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.sb-icon-btn-sm:hover {
+  color: #64748b;
+}
+
+/* Seções */
+.sb-section {
+  padding: 12px 8px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sb-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+  margin-bottom: 4px;
+}
+
+.sb-section-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #2d3f55;
+}
+
+/* Itens */
+.sb-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #4e6175;
+  font-size: 12px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sb-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+}
+
+.sb-item.active {
+  background: rgba(59, 130, 246, 0.08);
+  color: #93c5fd;
+}
+
+/* Grupos com chevron */
+.sb-group {
+  margin-top: 1px;
+}
+
+.sb-group-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #4e6175;
+  font-size: 12px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sb-group-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+}
+
+.sb-group-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sb-group-right {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.sb-arrow-btn {
+  display: flex;
+  align-items: center;
+  color: #2d3f55;
+  padding: 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.sb-arrow-btn:hover {
+  color: #64748b;
+}
+
+.sb-chevron {
+  color: #2d3f55;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.sb-chevron.open {
+  transform: rotate(180deg);
+}
+
+/* Ícones */
+.sb-item-icon {
+  flex-shrink: 0;
+}
+
+.sb-item-icon.muted  { color: #2d3f55; }
+.sb-item-icon.blue   { color: #3b82f6; }
+.sb-item-icon.yellow { color: #f59e0b; }
+
+/* Histórico */
+.sb-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.sb-history-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+/* Políticas salvas */
+.sb-policies {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 16px 16px 24px;
+  gap: 6px;
+}
+
+.sb-policies-icon {
+  color: #1a2b3d;
+}
+
+.sb-policies-text {
+  font-size: 11px;
+  color: #1a2b3d;
+  text-align: center;
+  line-height: 1.4;
+  margin: 0;
 }
