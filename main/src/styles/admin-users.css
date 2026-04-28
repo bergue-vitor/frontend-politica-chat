@@ -371,6 +371,48 @@
   font-size: 0.92rem;
 }
 
+.invite-form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 22px 4px;
+}
+
+.invite-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.invite-field span {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.invite-field input {
+  height: 44px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 0 14px;
+  font: inherit;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.invite-field input::placeholder {
+  color: var(--text-secondary);
+}
+
+.invite-field input:focus {
+  border-color: rgba(47, 125, 246, 0.7);
+  box-shadow: 0 0 0 3px rgba(47, 125, 246, 0.15);
+}
+
 .role-options {
   display: flex;
   flex-direction: column;
@@ -382,6 +424,10 @@
 
 .status-options {
   padding-top: 0;
+}
+
+.invite-role-options {
+  padding-top: 18px;
 }
 
 .role-options legend {

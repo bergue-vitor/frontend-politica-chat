@@ -55,6 +55,11 @@ export default function AdminUsers() {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [selectedRole, setSelectedRole] = useState<UserRole>('Default');
   const [selectedStatus, setSelectedStatus] = useState<UserStatus>('Ativo');
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [inviteName, setInviteName] = useState('');
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteDepartment, setInviteDepartment] = useState('');
+  const [inviteRole, setInviteRole] = useState<UserRole>('Default');
 
   const filteredUsers = useMemo(() => {
     return users.filter((user) => {
@@ -104,6 +109,30 @@ export default function AdminUsers() {
     handleCloseRoleModal();
   }
 
+  function handleCloseInviteModal() {
+    setIsInviteModalOpen(false);
+    setInviteName('');
+    setInviteEmail('');
+    setInviteDepartment('');
+    setInviteRole('Default');
+  }
+
+  function handleInviteUser(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const nextUser: User = {
+      id: Math.max(...users.map((user) => user.id), 0) + 1,
+      name: inviteName.trim(),
+      email: inviteEmail.trim(),
+      department: inviteDepartment.trim(),
+      role: inviteRole,
+      status: 'Pendente',
+    };
+
+    setUsers((currentUsers) => [nextUser, ...currentUsers]);
+    handleCloseInviteModal();
+  }
+
   return (
     <main className="admin-users-page">
       <section className="admin-users-content">
@@ -114,7 +143,13 @@ export default function AdminUsers() {
 
           <div className="header-actions">
             <button className="secondary-btn">Exportar usuários</button>
-            <button className="primary-btn">Convidar usuário</button>
+            <button
+              type="button"
+              className="primary-btn"
+              onClick={() => setIsInviteModalOpen(true)}
+            >
+              Convidar usuário
+            </button>
           </div>
         </header>
 
@@ -290,6 +325,114 @@ export default function AdminUsers() {
               </button>
             </footer>
           </section>
+        </div>
+      )}
+
+      {isInviteModalOpen && (
+        <div className="role-modal-backdrop" role="presentation">
+          <form
+            className="role-modal invite-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="invite-modal-title"
+            onSubmit={handleInviteUser}
+          >
+            <header className="role-modal-header">
+              <div>
+                <h2 id="invite-modal-title">Convidar usuário</h2>
+                <p>Adicione uma pessoa à lista de usuários.</p>
+              </div>
+
+              <button
+                type="button"
+                className="role-modal-close"
+                onClick={handleCloseInviteModal}
+                aria-label="Fechar"
+              >
+                x
+              </button>
+            </header>
+
+            <div className="invite-form-grid">
+              <label className="invite-field">
+                <span>Nome</span>
+                <input
+                  type="text"
+                  value={inviteName}
+                  onChange={(event) => setInviteName(event.target.value)}
+                  placeholder="Ex: Beatriz Almeida"
+                  required
+                />
+              </label>
+
+              <label className="invite-field">
+                <span>E-mail</span>
+                <input
+                  type="email"
+                  value={inviteEmail}
+                  onChange={(event) => setInviteEmail(event.target.value)}
+                  placeholder="nome@empresa.com"
+                  required
+                />
+              </label>
+
+              <label className="invite-field">
+                <span>Departamento</span>
+                <input
+                  type="text"
+                  value={inviteDepartment}
+                  onChange={(event) => setInviteDepartment(event.target.value)}
+                  placeholder="Ex: Financeiro"
+                  required
+                />
+              </label>
+            </div>
+
+            <fieldset className="role-options invite-role-options">
+              <legend>Papel inicial</legend>
+
+              <label className="role-option">
+                <input
+                  type="radio"
+                  name="invite-role"
+                  value="Admin"
+                  checked={inviteRole === 'Admin'}
+                  onChange={() => setInviteRole('Admin')}
+                />
+                <span>
+                  <strong>Admin</strong>
+                  Acesso ao chat e páginas de gerenciamento.
+                </span>
+              </label>
+
+              <label className="role-option">
+                <input
+                  type="radio"
+                  name="invite-role"
+                  value="Default"
+                  checked={inviteRole === 'Default'}
+                  onChange={() => setInviteRole('Default')}
+                />
+                <span>
+                  <strong>Default</strong>
+                  Acesso apenas ao chat e fontes disponíveis.
+                </span>
+              </label>
+            </fieldset>
+
+            <footer className="role-modal-actions">
+              <button
+                type="button"
+                className="secondary-btn"
+                onClick={handleCloseInviteModal}
+              >
+                Cancelar
+              </button>
+              <button type="submit" className="primary-btn">
+                Enviar convite
+              </button>
+            </footer>
+          </form>
         </div>
       )}
     </main>
