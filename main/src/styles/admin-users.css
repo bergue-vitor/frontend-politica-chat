@@ -311,6 +311,8 @@
 
 .role-modal {
   width: min(100%, 460px);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
   border: 1px solid var(--border-color-strong);
   border-radius: 16px;
   background: #0e1c33;
@@ -374,8 +376,12 @@
   flex-direction: column;
   gap: 10px;
   margin: 0;
-  padding: 16px 22px 22px;
+  padding: 16px 22px 18px;
   border: 0;
+}
+
+.status-options {
+  padding-top: 0;
 }
 
 .role-options legend {

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { UsersStats } from './components/UsersStats';
 import { UsersTable } from './components/UsersTable';
-import type { User, UserRole } from '../../types/user';
+import type { User, UserRole, UserStatus } from '../../types/user';
 import '../../styles/admin-users.css';
 
 const mockUsers: User[] = [
@@ -54,6 +54,7 @@ export default function AdminUsers() {
   const [departmentFilter, setDepartmentFilter] = useState('Todos');
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [selectedRole, setSelectedRole] = useState<UserRole>('Default');
+  const [selectedStatus, setSelectedStatus] = useState<UserStatus>('Ativo');
 
   const filteredUsers = useMemo(() => {
     return users.filter((user) => {
@@ -81,6 +82,7 @@ export default function AdminUsers() {
   function handleOpenRoleModal(user: User) {
     setEditingUser(user);
     setSelectedRole(user.role);
+    setSelectedStatus(user.status);
   }
 
   function handleCloseRoleModal() {
@@ -95,7 +97,7 @@ export default function AdminUsers() {
     setUsers((currentUsers) =>
       currentUsers.map((user) =>
         user.id === editingUser.id
-          ? { ...user, role: selectedRole }
+          ? { ...user, role: selectedRole, status: selectedStatus }
           : user
       )
     );
@@ -221,6 +223,52 @@ export default function AdminUsers() {
                 <span>
                   <strong>Default</strong>
                   Acesso apenas ao chat e fontes disponíveis.
+                </span>
+              </label>
+            </fieldset>
+
+            <fieldset className="role-options status-options">
+              <legend>Status do usuário</legend>
+
+              <label className="role-option status-option">
+                <input
+                  type="radio"
+                  name="user-status"
+                  value="Ativo"
+                  checked={selectedStatus === 'Ativo'}
+                  onChange={() => setSelectedStatus('Ativo')}
+                />
+                <span>
+                  <strong>Ativo</strong>
+                  Usuário liberado para acessar a plataforma.
+                </span>
+              </label>
+
+              <label className="role-option status-option">
+                <input
+                  type="radio"
+                  name="user-status"
+                  value="Pendente"
+                  checked={selectedStatus === 'Pendente'}
+                  onChange={() => setSelectedStatus('Pendente')}
+                />
+                <span>
+                  <strong>Pendente</strong>
+                  Acesso aguardando confirmação ou revisão.
+                </span>
+              </label>
+
+              <label className="role-option status-option">
+                <input
+                  type="radio"
+                  name="user-status"
+                  value="Bloqueado"
+                  checked={selectedStatus === 'Bloqueado'}
+                  onChange={() => setSelectedStatus('Bloqueado')}
+                />
+                <span>
+                  <strong>Bloqueado</strong>
+                  Usuário sem acesso até nova alteração.
                 </span>
               </label>
             </fieldset>
