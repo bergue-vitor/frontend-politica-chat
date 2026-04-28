@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   ArrowRight,
@@ -24,79 +25,91 @@ const conversationHistory = [
 export default function Sidebar() {
   const { user } = useAuth();
   const isAdmin = user.role === '2';
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <aside className="sidebar" aria-label="Navegação principal">
+    <aside
+      className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}
+      aria-label="Navegação principal"
+    >
       <div className="sidebar-top-icons">
         <NavLink to="/chat" className="sidebar-brand" aria-label="Ir para o chat">
           <ShieldCheck size={20} strokeWidth={1.8} />
         </NavLink>
 
-        <NavLink to="/chat" className="sidebar-chat-icon" aria-label="Conversas">
+        <button
+          type="button"
+          className="sidebar-chat-icon"
+          onClick={() => setIsCollapsed((current) => !current)}
+          aria-label={isCollapsed ? 'Abrir sidebar' : 'Fechar sidebar'}
+          aria-expanded={!isCollapsed}
+        >
           <MessageSquare size={19} strokeWidth={1.8} />
-        </NavLink>
+        </button>
       </div>
 
-      <div className="sidebar-divider" />
+      <div className="sidebar-content" aria-hidden={isCollapsed}>
+        <div className="sidebar-divider" />
 
-      <section className="sidebar-section sidebar-sources">
-        <NavLink
-          to={isAdmin ? '/admin/documents' : '/chat'}
-          className="sidebar-section-header sidebar-section-header-link"
-          aria-label={isAdmin ? 'Ir para políticas e normas' : 'Fontes da empresa'}
-        >
-          <h2>Fontes da Empresa</h2>
-          <Grid2X2 size={17} strokeWidth={1.8} />
-        </NavLink>
+        <section className="sidebar-section sidebar-sources">
+          <NavLink
+            to={isAdmin ? '/admin/documents' : '/chat'}
+            className="sidebar-section-header sidebar-section-header-link"
+            aria-label={isAdmin ? 'Ir para políticas e normas' : 'Fontes da empresa'}
+          >
+            <h2>Fontes da Empresa</h2>
+            <Grid2X2 size={17} strokeWidth={1.8} />
+          </NavLink>
+
+          {isAdmin && (
+            <NavLink to="/admin/documents" className="sidebar-add-source">
+              <span aria-hidden="true">+</span>
+              Adicionar políticas/normas
+            </NavLink>
+          )}
+        </section>
 
         {isAdmin && (
-          <NavLink to="/admin/documents" className="sidebar-add-source">
-            <span aria-hidden="true">+</span>
-            Adicionar políticas/normas
-          </NavLink>
+          <section className="sidebar-admin-panel" aria-label="Administração">
+            <p className="sidebar-kicker">Administração</p>
+
+            <nav className="sidebar-admin-nav">
+              <NavLink to="/admin/documents" className="sidebar-admin-link">
+                <FileText size={17} strokeWidth={1.8} />
+                Gestão de Documentos
+              </NavLink>
+
+              <NavLink to="/admin/users" className="sidebar-admin-link">
+                <UserCog size={17} strokeWidth={1.8} />
+                Gerenciamento de Usuários
+              </NavLink>
+            </nav>
+
+            <SourceSearch />
+          </section>
         )}
-      </section>
 
-      {isAdmin && (
-        <section className="sidebar-admin-panel" aria-label="Administração">
-          <p className="sidebar-kicker">Administração</p>
+        {!isAdmin && <SourceSearch />}
 
-          <nav className="sidebar-admin-nav">
-            <NavLink to="/admin/documents" className="sidebar-admin-link">
-              <FileText size={17} strokeWidth={1.8} />
-              Gestão de Documentos
-            </NavLink>
+        <section className="sidebar-history" aria-label="Histórico de conversas">
+          <p className="sidebar-kicker">Histórico de Conversas</p>
 
-            <NavLink to="/admin/users" className="sidebar-admin-link">
-              <UserCog size={17} strokeWidth={1.8} />
-              Gerenciamento de Usuários
-            </NavLink>
+          <nav className="sidebar-history-list">
+            {conversationHistory.slice(0, isAdmin ? 1 : 3).map((item) => (
+              <NavLink to="/chat" className="sidebar-history-link" key={item}>
+                <MessageSquare size={17} strokeWidth={1.8} />
+                <span>{item}</span>
+              </NavLink>
+            ))}
           </nav>
-
-          <SourceSearch />
         </section>
-      )}
 
-      {!isAdmin && <SourceSearch />}
-
-      <section className="sidebar-history" aria-label="Histórico de conversas">
-        <p className="sidebar-kicker">Histórico de Conversas</p>
-
-        <nav className="sidebar-history-list">
-          {conversationHistory.slice(0, isAdmin ? 1 : 3).map((item) => (
-            <NavLink to="/chat" className="sidebar-history-link" key={item}>
-              <MessageSquare size={17} strokeWidth={1.8} />
-              <span>{item}</span>
-            </NavLink>
-          ))}
-        </nav>
-      </section>
-
-      <div className="sidebar-saved-empty">
-        <div className="sidebar-saved-icon">
-          <FileText size={23} strokeWidth={1.8} />
+        <div className="sidebar-saved-empty">
+          <div className="sidebar-saved-icon">
+            <FileText size={23} strokeWidth={1.8} />
+          </div>
+          <p>As políticas salvas vão aparecer aqui.</p>
         </div>
-        <p>As políticas salvas vão aparecer aqui.</p>
       </div>
     </aside>
   );
