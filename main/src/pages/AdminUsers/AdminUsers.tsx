@@ -142,7 +142,6 @@ export default function AdminUsers() {
           </div>
 
           <div className="header-actions">
-            <button className="secondary-btn">Exportar usuários</button>
             <button
               type="button"
               className="primary-btn"
@@ -276,20 +275,6 @@ export default function AdminUsers() {
                 <span>
                   <strong>Ativo</strong>
                   Usuário liberado para acessar a plataforma.
-                </span>
-              </label>
-
-              <label className="role-option status-option">
-                <input
-                  type="radio"
-                  name="user-status"
-                  value="Pendente"
-                  checked={selectedStatus === 'Pendente'}
-                  onChange={() => setSelectedStatus('Pendente')}
-                />
-                <span>
-                  <strong>Pendente</strong>
-                  Acesso aguardando confirmação ou revisão.
                 </span>
               </label>
 
