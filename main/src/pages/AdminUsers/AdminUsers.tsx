@@ -58,7 +58,6 @@ export default function AdminUsers() {
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [inviteName, setInviteName] = useState('');
   const [inviteEmail, setInviteEmail] = useState('');
-  const [inviteDepartment, setInviteDepartment] = useState('');
   const [inviteRole, setInviteRole] = useState<UserRole>('Default');
 
   const filteredUsers = useMemo(() => {
@@ -113,7 +112,6 @@ export default function AdminUsers() {
     setIsInviteModalOpen(false);
     setInviteName('');
     setInviteEmail('');
-    setInviteDepartment('');
     setInviteRole('Default');
   }
 
@@ -124,7 +122,7 @@ export default function AdminUsers() {
       id: Math.max(...users.map((user) => user.id), 0) + 1,
       name: inviteName.trim(),
       email: inviteEmail.trim(),
-      department: inviteDepartment.trim(),
+      department: 'Não informado',
       role: inviteRole,
       status: 'Pendente',
     };
@@ -357,17 +355,6 @@ export default function AdminUsers() {
                   value={inviteEmail}
                   onChange={(event) => setInviteEmail(event.target.value)}
                   placeholder="nome@empresa.com"
-                  required
-                />
-              </label>
-
-              <label className="invite-field">
-                <span>Departamento</span>
-                <input
-                  type="text"
-                  value={inviteDepartment}
-                  onChange={(event) => setInviteDepartment(event.target.value)}
-                  placeholder="Ex: Financeiro"
                   required
                 />
               </label>

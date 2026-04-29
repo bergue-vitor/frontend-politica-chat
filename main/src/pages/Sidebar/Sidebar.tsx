@@ -7,6 +7,7 @@ import {
   FileText,
   Globe2,
   Grid2X2,
+  History,
   MessageSquare,
   Search,
   ShieldCheck,
@@ -82,6 +83,11 @@ export default function Sidebar() {
               <NavLink to="/admin/users" className="sidebar-admin-link">
                 <UserCog size={17} strokeWidth={1.8} />
                 Gerenciamento de Usuários
+              </NavLink>
+
+              <NavLink to="/document-timeline" className="sidebar-admin-link">
+                <History size={17} strokeWidth={1.8} />
+                Timeline de Documentos
               </NavLink>
             </nav>
 
