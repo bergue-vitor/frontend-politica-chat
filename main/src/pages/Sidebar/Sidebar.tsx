@@ -10,6 +10,7 @@ import {
   History,
   Layers3,
   MessageSquare,
+  Pencil,
   Search,
   ShieldCheck,
   Sparkles,
@@ -122,6 +123,18 @@ export default function Sidebar() {
           </div>
           <p>As políticas salvas vão aparecer aqui.</p>
         </div>
+
+        <section className="sidebar-profile-card" aria-label="Perfil do usuário">
+          <div className="sidebar-profile-info">
+            <strong>{user.name}</strong>
+            <span>{user.email}</span>
+          </div>
+
+          <NavLink to="/profile/edit" className="sidebar-profile-link">
+            <Pencil size={15} strokeWidth={1.8} />
+            Editar perfil
+          </NavLink>
+        </section>
       </div>
     </aside>
   );

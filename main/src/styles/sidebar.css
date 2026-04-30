@@ -302,6 +302,60 @@
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
 }
 
+.sidebar-profile-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 8px;
+  background: #0a1318;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+.sidebar-profile-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar-profile-info strong,
+.sidebar-profile-info span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-profile-info strong {
+  color: #f4f8fb;
+  font-size: 0.9rem;
+}
+
+.sidebar-profile-info span {
+  color: rgba(220, 231, 236, 0.68);
+  font-size: 0.78rem;
+}
+
+.sidebar-profile-link {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border-radius: 8px;
+  background: #081116;
+  color: #edf4f7;
+  font-size: 0.84rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-profile-link:hover,
+.sidebar-profile-link.active {
+  background: #0e1b22;
+}
+
 @media (max-width: 900px) {
   .sidebar {
     width: 292px;

@@ -14,6 +14,7 @@ interface AuthContextData {
   isAuthenticated: boolean;
   loginAsAdmin: () => void;
   loginAsUser: () => void;
+  updateProfile: (profile: Pick<User, 'name' | 'email'>) => void;
   logout: () => void;
 }
 
@@ -50,12 +51,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsAuthenticated(false);
   }
 
+  function updateProfile(profile: Pick<User, 'name' | 'email'>) {
+    setUser((currentUser) => ({
+      ...currentUser,
+      ...profile,
+    }));
+  }
+
   const value = useMemo(
     () => ({
       user,
       isAuthenticated,
       loginAsAdmin,
       loginAsUser,
+      updateProfile,
       logout,
     }),
     [user, isAuthenticated]

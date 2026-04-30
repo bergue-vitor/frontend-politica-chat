@@ -10,6 +10,7 @@ import AdminUsers from '../pages/AdminUsers/AdminUsers';
 import AdminDocuments from '../pages/AdminDocuments/AdminDocuments';
 import AdminCatalogs from '../pages/AdminCatalogs/AdminCatalogs';
 import DocumentTimeline from '../pages/DocumentTimeline/DocumentTimeline';
+import ProfileEdit from '../pages/ProfileEdit/ProfileEdit';
 
 import ProtectedRoute from '../components/ProtectedRoute';
 
@@ -36,6 +37,15 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['1', '2']}>
               <Chat />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="profile/edit"
+          element={
+            <ProtectedRoute allowedRoles={['1', '2']}>
+              <ProfileEdit />
             </ProtectedRoute>
           }
         />
