@@ -277,11 +277,6 @@
   color: var(--green-text);
 }
 
-.status-badge.pendente {
-  background: var(--yellow-bg);
-  color: var(--yellow-text);
-}
-
 .status-badge.bloqueado {
   background: var(--red-bg);
   color: var(--red-text);

@@ -2,20 +2,20 @@ interface UsersStatsProps {
   totalUsers: number;
   totalAdmins: number;
   totalDefault: number;
-  pendingInvites: number;
+  activeUsers: number;
 }
 
 export function UsersStats({
   totalUsers,
   totalAdmins,
   totalDefault,
-  pendingInvites,
+  activeUsers,
 }: UsersStatsProps) {
   const stats = [
     { label: 'USUÁRIOS TOTAIS', value: totalUsers },
     { label: 'ADMINS', value: totalAdmins.toString().padStart(2, '0') },
     { label: 'DEFAULT', value: totalDefault },
-    { label: 'CONVITES PENDENTES', value: pendingInvites.toString().padStart(2, '0') },
+    { label: 'USUÁRIOS ATIVOS', value: activeUsers.toString().padStart(2, '0') },
   ];
 
   return (

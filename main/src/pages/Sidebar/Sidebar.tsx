@@ -8,6 +8,7 @@ import {
   Globe2,
   Grid2X2,
   History,
+  Layers3,
   MessageSquare,
   Search,
   ShieldCheck,
@@ -83,6 +84,11 @@ export default function Sidebar() {
               <NavLink to="/admin/users" className="sidebar-admin-link">
                 <UserCog size={17} strokeWidth={1.8} />
                 Gerenciamento de Usuários
+              </NavLink>
+
+              <NavLink to="/admin/catalogs" className="sidebar-admin-link">
+                <Layers3 size={17} strokeWidth={1.8} />
+                Departamentos e Sistemas
               </NavLink>
 
               <NavLink to="/document-timeline" className="sidebar-admin-link">

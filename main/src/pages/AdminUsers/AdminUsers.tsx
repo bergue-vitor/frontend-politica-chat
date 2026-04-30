@@ -35,7 +35,7 @@ const mockUsers: User[] = [
     email: 'rafael.lima@empresa.com',
     role: 'Default',
     department: 'Financeiro',
-    status: 'Pendente',
+    status: 'Ativo',
   },
   {
     id: 5,
@@ -79,7 +79,7 @@ export default function AdminUsers() {
   const totalUsers = users.length;
   const totalAdmins = users.filter((user) => user.role === 'Admin').length;
   const totalDefault = users.filter((user) => user.role === 'Default').length;
-  const pendingInvites = users.filter((user) => user.status === 'Pendente').length;
+  const activeUsers = users.filter((user) => user.status === 'Ativo').length;
 
   const departments = ['Todos', ...new Set(users.map((user) => user.department))];
 
@@ -124,7 +124,7 @@ export default function AdminUsers() {
       email: inviteEmail.trim(),
       department: 'Não informado',
       role: inviteRole,
-      status: 'Pendente',
+      status: 'Ativo',
     };
 
     setUsers((currentUsers) => [nextUser, ...currentUsers]);
@@ -154,7 +154,7 @@ export default function AdminUsers() {
           totalUsers={totalUsers}
           totalAdmins={totalAdmins}
           totalDefault={totalDefault}
-          pendingInvites={pendingInvites}
+          activeUsers={activeUsers}
         />
 
         <section className="users-section">

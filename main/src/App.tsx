@@ -8,6 +8,7 @@ import Register from './pages/Register/Register';
 import Chat from './pages/Chat/Chat';
 import AdminUsers from './pages/AdminUsers/AdminUsers';
 import AdminDocuments from './pages/AdminDocuments/AdminDocuments';
+import AdminCatalogs from './pages/AdminCatalogs/AdminCatalogs';
 import DocumentTimeline from './pages/DocumentTimeline/DocumentTimeline';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -49,6 +50,14 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['2']}>
               <AdminDocuments />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/catalogs"
+          element={
+            <ProtectedRoute allowedRoles={['2']}>
+              <AdminCatalogs />
             </ProtectedRoute>
           }
         />
