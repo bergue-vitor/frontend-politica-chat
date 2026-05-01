@@ -3,17 +3,15 @@ import { NavLink } from 'react-router-dom';
 import {
   ArrowRight,
   Bot,
-  ChevronDown,
   FileText,
-  Globe2,
   Grid2X2,
   History,
+  KeyRound,
   Layers3,
   MessageSquare,
   Pencil,
   Search,
   ShieldCheck,
-  Sparkles,
   UserCog,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -92,6 +90,11 @@ export default function Sidebar() {
                 Departamentos e Sistemas
               </NavLink>
 
+              <NavLink to="/admin/tokens" className="sidebar-admin-link">
+                <KeyRound size={17} strokeWidth={1.8} />
+                Gerenciamento de Tokens
+              </NavLink>
+
               <NavLink to="/document-timeline" className="sidebar-admin-link">
                 <History size={17} strokeWidth={1.8} />
                 Timeline de Documentos
@@ -149,18 +152,6 @@ function SourceSearch() {
       </label>
 
       <div className="sidebar-search-actions">
-        <button type="button" className="sidebar-filter-button">
-          <Globe2 size={15} strokeWidth={1.8} />
-          Intranet
-          <ChevronDown size={14} strokeWidth={1.8} />
-        </button>
-
-        <button type="button" className="sidebar-filter-button">
-          <Sparkles size={15} strokeWidth={1.8} />
-          Pesquisa rápida
-          <ChevronDown size={14} strokeWidth={1.8} />
-        </button>
-
         <button type="button" className="sidebar-go-button" aria-label="Pesquisar">
           <ArrowRight size={16} strokeWidth={1.9} />
         </button>
