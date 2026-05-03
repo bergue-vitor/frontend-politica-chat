@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { mockAssistantContent, mockAssistantSources } from '../mocks/chat.mock';
+import { getMockAssistantResponse } from '../mocks/chat.mock';
 import type { ChatMessage } from '../types/chat.types';
 
-export function useChat() {
+export function useChat(selectedDepartment: string) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -27,12 +27,13 @@ export function useChat() {
         setTimeout(resolve, 1000);
       });
 
+      const assistantResponse = getMockAssistantResponse(selectedDepartment);
       const botMessage: ChatMessage = {
         id: crypto.randomUUID(),
         sender: 'assistant',
-        content: mockAssistantContent,
+        content: assistantResponse.content,
         createdAt: new Date().toISOString(),
-        sources: mockAssistantSources.map((source) => ({
+        sources: assistantResponse.sources.map((source) => ({
           ...source,
           id: crypto.randomUUID(),
         })),

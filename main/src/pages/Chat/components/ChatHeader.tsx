@@ -1,4 +1,4 @@
-import { EllipsisVertical, History, Share2, SlidersHorizontal } from 'lucide-react';
+import { EllipsisVertical, History, Share2 } from 'lucide-react';
 
 interface ChatHeaderProps {
   badgeLabel: string;
@@ -39,9 +39,6 @@ export function ChatHeader({ badgeLabel }: ChatHeaderProps) {
         </button>
         <button type="button" className="chat-icon-button" aria-label="Histórico">
           <History size={16} />
-        </button>
-        <button type="button" className="chat-icon-button" aria-label="Filtros">
-          <SlidersHorizontal size={16} />
         </button>
         <button type="button" className="chat-icon-button" aria-label="Mais opções">
           <EllipsisVertical size={16} />
