@@ -390,7 +390,8 @@
   text-transform: uppercase;
 }
 
-.invite-field input {
+.invite-field input,
+.invite-field select {
   height: 44px;
   border: 1px solid var(--border-color);
   border-radius: 10px;
@@ -406,7 +407,8 @@
   color: var(--text-secondary);
 }
 
-.invite-field input:focus {
+.invite-field input:focus,
+.invite-field select:focus {
   border-color: rgba(47, 125, 246, 0.7);
   box-shadow: 0 0 0 3px rgba(47, 125, 246, 0.15);
 }

@@ -3,8 +3,6 @@ import {
   CalendarDays,
   Coins,
   Database,
-  FileText,
-  MoreVertical,
   Plus,
   Search,
   TrendingUp,
@@ -13,64 +11,54 @@ import {
 import '../../styles/admin-users.css';
 import '../../styles/admin-tokens.css';
 
-type ConsumptionRecord = {
+type AiProvider = 'GPT' | 'Claude' | 'Gemini';
+
+type ApiKeyUsageRecord = {
   id: number;
-  user: string;
-  email: string;
-  department: string;
-  type: string;
+  provider: AiProvider;
+  apiKeyName: string;
+  apiKeyPreview: string;
   tokens: number;
   date: string;
   dateValue: string;
-  status: 'Concluído' | 'Pendente';
 };
 
-type TokenSortOrder = 'default' | 'tokens-desc' | 'tokens-asc' | 'date-desc' | 'date-asc';
-
-const consumptionRecords: ConsumptionRecord[] = [
+const apiKeyUsageRecords: ApiKeyUsageRecord[] = [
   {
     id: 1,
-    user: 'Carla Mendes',
-    email: 'carla.mendes@empresa.com',
-    department: 'Governança / RH',
-    type: 'Consulta de política',
-    tokens: 186400,
-    date: '10 Out 2026',
-    dateValue: '2026-10-10',
-    status: 'Concluído',
+    provider: 'GPT',
+    apiKeyName: 'GPT Produção',
+    apiKeyPreview: 'sk-prod-****-8A21',
+    tokens: 2864000,
+    date: '10 Out 2026, 14:35',
+    dateValue: '2026-10-10T14:35:00',
   },
   {
     id: 2,
-    user: 'João Pereira',
-    email: 'joao.pereira@empresa.com',
-    department: 'Tecnologia (TI)',
-    type: 'Resumo de documento',
-    tokens: 152800,
-    date: '10 Out 2026',
-    dateValue: '2026-10-10',
-    status: 'Concluído',
+    provider: 'Claude',
+    apiKeyName: 'Claude Jurídico',
+    apiKeyPreview: 'sk-ant-****-4F19',
+    tokens: 2152800,
+    date: '10 Out 2026, 11:20',
+    dateValue: '2026-10-10T11:20:00',
   },
   {
     id: 3,
-    user: 'Ana Souza',
-    email: 'ana.souza@empresa.com',
-    department: 'Recursos Humanos',
-    type: 'Análise normativa',
-    tokens: 96500,
-    date: '09 Out 2026',
-    dateValue: '2026-10-09',
-    status: 'Pendente',
+    provider: 'GPT',
+    apiKeyName: 'GPT Homologação',
+    apiKeyPreview: 'sk-hml-****-72BC',
+    tokens: 996500,
+    date: '09 Out 2026, 17:05',
+    dateValue: '2026-10-09T17:05:00',
   },
   {
     id: 4,
-    user: 'Rafael Lima',
-    email: 'rafael.lima@empresa.com',
-    department: 'Financeiro',
-    type: 'Busca em documentos',
-    tokens: 84200,
-    date: '09 Out 2026',
-    dateValue: '2026-10-09',
-    status: 'Concluído',
+    provider: 'Gemini',
+    apiKeyName: 'Gemini Pesquisa',
+    apiKeyPreview: 'gm-****-91DA',
+    tokens: 584200,
+    date: '09 Out 2026, 09:45',
+    dateValue: '2026-10-09T09:45:00',
   },
 ];
 
@@ -83,29 +71,26 @@ function formatTokens(value: number) {
 
 export default function AdminTokens() {
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('Todos');
-  const [departmentFilter, setDepartmentFilter] = useState('Todos');
-  const [tokenSortOrder, setTokenSortOrder] = useState<TokenSortOrder>('default');
   const [periodFilter, setPeriodFilter] = useState('15 dias');
   const [customPeriod, setCustomPeriod] = useState({ start: '', end: '' });
-  const [openActionId, setOpenActionId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [tokenAmount, setTokenAmount] = useState('');
+  const [apiProvider, setApiProvider] = useState<AiProvider>('GPT');
+  const [apiKey, setApiKey] = useState('');
 
   const remainingTokens = totalTokens - usedTokens;
   const usagePercent = (usedTokens / totalTokens) * 100;
-  const departments = ['Todos', ...new Set(consumptionRecords.map((record) => record.department))];
   const dailyAverage = Math.round(usedTokens / 15);
-  const topDepartment = useMemo(() => {
-    const usageByDepartment = consumptionRecords.reduce<Record<string, number>>((acc, record) => {
-      acc[record.department] = (acc[record.department] ?? 0) + record.tokens;
+  const estimatedDaysLeft = Math.max(1, Math.floor(remainingTokens / dailyAverage));
+
+  const topProvider = useMemo(() => {
+    const usageByProvider = apiKeyUsageRecords.reduce<Record<string, number>>((acc, record) => {
+      acc[record.provider] = (acc[record.provider] ?? 0) + record.tokens;
       return acc;
     }, {});
 
-    return Object.entries(usageByDepartment).sort((first, second) => second[1] - first[1])[0]?.[0] ?? 'Sem dados';
+    return Object.entries(usageByProvider).sort((first, second) => second[1] - first[1])[0]?.[0] ?? 'Sem dados';
   }, []);
-  const estimatedDaysLeft = Math.max(1, Math.floor(remainingTokens / dailyAverage));
 
   useEffect(() => {
     const loadingTimer = window.setTimeout(() => setIsLoading(false), 450);
@@ -114,7 +99,7 @@ export default function AdminTokens() {
   }, []);
 
   const filteredRecords = useMemo(() => {
-    const latestRecordDate = Math.max(...consumptionRecords.map((record) => new Date(record.dateValue).getTime()));
+    const latestRecordDate = Math.max(...apiKeyUsageRecords.map((record) => new Date(record.dateValue).getTime()));
     const periodStartDate = new Date(latestRecordDate);
 
     if (periodFilter === '7 dias') {
@@ -125,47 +110,32 @@ export default function AdminTokens() {
       periodStartDate.setDate(periodStartDate.getDate() - 29);
     }
 
-    return consumptionRecords
+    return apiKeyUsageRecords
       .filter((record) => {
         const searchValue = search.toLowerCase();
         const recordDate = new Date(record.dateValue);
         const matchesSearch =
-          record.user.toLowerCase().includes(searchValue) ||
-          record.email.toLowerCase().includes(searchValue) ||
-          record.type.toLowerCase().includes(searchValue) ||
-          record.department.toLowerCase().includes(searchValue);
-        const matchesStatus = statusFilter === 'Todos' || record.status === statusFilter;
-        const matchesDepartment = departmentFilter === 'Todos' || record.department === departmentFilter;
+          record.provider.toLowerCase().includes(searchValue) ||
+          record.apiKeyName.toLowerCase().includes(searchValue) ||
+          record.apiKeyPreview.toLowerCase().includes(searchValue);
         const matchesPeriod =
           periodFilter === 'personalizado'
             ? (!customPeriod.start || recordDate >= new Date(customPeriod.start)) &&
               (!customPeriod.end || recordDate <= new Date(customPeriod.end))
             : recordDate >= periodStartDate;
 
-        return matchesSearch && matchesStatus && matchesDepartment && matchesPeriod;
+        return matchesSearch && matchesPeriod;
       })
-      .sort((firstRecord, secondRecord) => {
-        if (tokenSortOrder === 'default' || tokenSortOrder === 'tokens-desc') {
-          return secondRecord.tokens - firstRecord.tokens;
-        }
-
-        if (tokenSortOrder === 'tokens-asc') {
-          return firstRecord.tokens - secondRecord.tokens;
-        }
-
-        const firstDate = new Date(firstRecord.dateValue).getTime();
-        const secondDate = new Date(secondRecord.dateValue).getTime();
-
-        return tokenSortOrder === 'date-desc' ? secondDate - firstDate : firstDate - secondDate;
-      });
-  }, [search, statusFilter, departmentFilter, tokenSortOrder, periodFilter, customPeriod]);
+      .sort((firstRecord, secondRecord) => secondRecord.tokens - firstRecord.tokens);
+  }, [search, periodFilter, customPeriod]);
 
   function closeAddModal() {
     setIsAddModalOpen(false);
-    setTokenAmount('');
+    setApiProvider('GPT');
+    setApiKey('');
   }
 
-  function handleAddTokens(event: React.FormEvent<HTMLFormElement>) {
+  function handleAddApiKey(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     closeAddModal();
   }
@@ -176,7 +146,7 @@ export default function AdminTokens() {
         <header className="admin-users-header tokens-header">
           <div>
             <h1>Gerenciamento de Tokens</h1>
-            <p>Monitore e gerencie o consumo de IA em toda a plataforma.</p>
+            <p>Monitore o consumo das APIs de IA por chave cadastrada.</p>
           </div>
 
           <div className="header-actions">
@@ -186,7 +156,7 @@ export default function AdminTokens() {
               onClick={() => setIsAddModalOpen(true)}
             >
               <Plus size={16} />
-              Adicionar Tokens
+              Adicionar API Key
             </button>
           </div>
         </header>
@@ -216,7 +186,7 @@ export default function AdminTokens() {
                 {usagePercent.toFixed(1)}% do limite mensal consumido
               </span>
               <span className="token-stat-micro">Média diária: {formatTokens(dailyAverage)} tokens</span>
-              <span className="token-stat-micro">Maior uso no mês: {topDepartment}</span>
+              <span className="token-stat-micro">IA com maior uso no mês: {topProvider}</span>
             </div>
             <span className="token-stat-icon token-stat-icon-yellow">
               <Zap size={17} />
@@ -243,13 +213,13 @@ export default function AdminTokens() {
 
         <section className="token-details-section">
           <div className="token-section-header token-details-header">
-            <h2>Detalhamento de Consumo</h2>
+            <h2>Consumo por API Key</h2>
             <div className="token-table-controls">
               <label className="token-search">
                 <Search size={17} />
                 <input
                   type="text"
-                  placeholder="Buscar por usuário, tipo ou departamento..."
+                  placeholder="Buscar por IA ou API key..."
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                 />
@@ -283,43 +253,6 @@ export default function AdminTokens() {
                   />
                 </div>
               )}
-
-              <select
-                className="token-filter-select"
-                value={statusFilter}
-                onChange={(event) => setStatusFilter(event.target.value)}
-                aria-label="Filtrar por status"
-              >
-                <option value="Todos">Status</option>
-                <option value="Concluído">Concluído</option>
-                <option value="Pendente">Pendente</option>
-              </select>
-
-              <select
-                className="token-filter-select token-department-select"
-                value={departmentFilter}
-                onChange={(event) => setDepartmentFilter(event.target.value)}
-                aria-label="Filtrar por departamento"
-              >
-                {departments.map((department) => (
-                  <option key={department} value={department}>
-                    {department === 'Todos' ? 'Departamento' : department}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                className="token-filter-select"
-                value={tokenSortOrder}
-                onChange={(event) => setTokenSortOrder(event.target.value as TokenSortOrder)}
-                aria-label="Ordenar por tokens"
-              >
-                <option value="default">Ordenar por</option>
-                <option value="tokens-desc">Maior consumo</option>
-                <option value="tokens-asc">Menor consumo</option>
-                <option value="date-desc">Mais recente</option>
-                <option value="date-asc">Mais antigo</option>
-              </select>
             </div>
           </div>
 
@@ -327,20 +260,17 @@ export default function AdminTokens() {
             <table className="users-table token-table">
               <thead>
                 <tr>
-                  <th>Usuário</th>
-                  <th>Departamento</th>
-                  <th>Tipo</th>
-                  <th>Tokens</th>
-                  <th>Data</th>
-                  <th>Status</th>
-                  <th>Ações</th>
+                  <th>IA</th>
+                  <th>API Key</th>
+                  <th>Tokens consumidos</th>
+                  <th>Último consumo</th>
                 </tr>
               </thead>
               <tbody>
                 {isLoading &&
                   Array.from({ length: 4 }).map((_, index) => (
                     <tr className="token-skeleton-row" key={`skeleton-${index}`}>
-                      <td colSpan={7}>
+                      <td colSpan={4}>
                         <span />
                       </td>
                     </tr>
@@ -350,63 +280,20 @@ export default function AdminTokens() {
                   <tr key={record.id}>
                     <td>
                       <div className="user-cell">
-                        <strong className="user-name">{record.user}</strong>
-                        <span className="user-email">{record.email}</span>
+                        <strong className="user-name">{record.provider}</strong>
+                        <span className="user-email">Modelo de IA conectado</span>
                       </div>
                     </td>
                     <td>
-                      <span
-                        className="department-badge token-tooltip"
-                        data-tooltip={`Departamento responsável por ${formatTokens(record.tokens)} tokens no período`}
-                      >
-                        {record.department}
-                      </span>
+                      <div className="user-cell">
+                        <strong className="user-name">{record.apiKeyName}</strong>
+                        <span className="user-email">{record.apiKeyPreview}</span>
+                      </div>
                     </td>
-                    <td>{record.type}</td>
                     <td>
                       <strong className="token-count">{formatTokens(record.tokens)}</strong>
                     </td>
                     <td>{record.date}</td>
-                    <td>
-                      <span
-                        className={`status-badge token-tooltip ${record.status === 'Concluído' ? 'ativo' : 'pendente'}`}
-                        data-tooltip={
-                          record.status === 'Concluído'
-                            ? 'Consumo validado e registrado para auditoria'
-                            : 'Registro aguardando consolidação operacional'
-                        }
-                      >
-                        {record.status}
-                      </span>
-                    </td>
-                    <td className="token-actions-cell">
-                      <button
-                        type="button"
-                        className="token-row-menu-btn"
-                        onClick={() => setOpenActionId((currentId) => (currentId === record.id ? null : record.id))}
-                        aria-label={`Abrir ações para ${record.user}`}
-                        aria-expanded={openActionId === record.id}
-                      >
-                        <MoreVertical size={17} />
-                      </button>
-
-                      {openActionId === record.id && (
-                        <div className="token-row-menu" role="menu">
-                          {[
-                            'Ver detalhes',
-                            'Histórico de consumo',
-                            'Exportar dados',
-                            'Definir limite de tokens',
-                            'Sinalizar uso suspeito',
-                          ].map((action) => (
-                            <button type="button" role="menuitem" key={action} onClick={() => setOpenActionId(null)}>
-                              <FileText size={14} />
-                              {action}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -422,12 +309,12 @@ export default function AdminTokens() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="token-modal-title"
-            onSubmit={handleAddTokens}
+            onSubmit={handleAddApiKey}
           >
             <header className="role-modal-header">
               <div>
-                <h2 id="token-modal-title">Adicionar tokens</h2>
-                <p>Informe a quantidade para ampliar a franquia mensal.</p>
+                <h2 id="token-modal-title">Adicionar API Key</h2>
+                <p>Escolha a IA utilizada e informe a chave de integração.</p>
               </div>
               <button
                 type="button"
@@ -441,14 +328,21 @@ export default function AdminTokens() {
 
             <div className="invite-form-grid">
               <label className="invite-field">
-                <span>Quantidade</span>
+                <span>IA</span>
+                <select value={apiProvider} onChange={(event) => setApiProvider(event.target.value as AiProvider)} required>
+                  <option value="GPT">GPT</option>
+                  <option value="Claude">Claude</option>
+                  <option value="Gemini">Gemini</option>
+                </select>
+              </label>
+
+              <label className="invite-field">
+                <span>API Key</span>
                 <input
-                  type="number"
-                  min="1"
-                  step="1000"
-                  value={tokenAmount}
-                  onChange={(event) => setTokenAmount(event.target.value)}
-                  placeholder="Ex: 1000000"
+                  type="password"
+                  value={apiKey}
+                  onChange={(event) => setApiKey(event.target.value)}
+                  placeholder="Cole a chave da API"
                   required
                 />
               </label>
@@ -465,7 +359,6 @@ export default function AdminTokens() {
           </form>
         </div>
       )}
-
     </main>
   );
 }
