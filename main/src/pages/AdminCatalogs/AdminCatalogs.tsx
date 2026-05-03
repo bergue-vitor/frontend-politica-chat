@@ -4,7 +4,7 @@ import '../../styles/admin-users.css';
 import '../../styles/admin-catalogs.css';
 
 type CatalogStatus = 'Ativo' | 'Inativo';
-type CatalogTab = 'departments' | 'systems';
+type CatalogMode = 'departments' | 'systems';
 
 type Department = {
   id: number;
@@ -85,8 +85,11 @@ const emptyForm = {
   status: 'Ativo' as CatalogStatus,
 };
 
-export default function AdminCatalogs() {
-  const [activeTab, setActiveTab] = useState<CatalogTab>('departments');
+interface AdminCatalogsProps {
+  mode: CatalogMode;
+}
+
+function AdminCatalogs({ mode }: AdminCatalogsProps) {
   const [departments, setDepartments] = useState<Department[]>(mockDepartments);
   const [systems, setSystems] = useState<CompanySystem[]>(mockSystems);
   const [searchTerm, setSearchTerm] = useState('');
@@ -96,7 +99,7 @@ export default function AdminCatalogs() {
   const [formValues, setFormValues] = useState(emptyForm);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const isDepartmentsTab = activeTab === 'departments';
+  const isDepartmentsTab = mode === 'departments';
   const currentItems = isDepartmentsTab ? departments : systems;
 
   const filteredItems = useMemo(() => {
@@ -114,18 +117,6 @@ export default function AdminCatalogs() {
 
   const activeDepartments = departments.filter((item) => item.status === 'Ativo').length;
   const activeSystems = systems.filter((item) => item.status === 'Ativo').length;
-
-  function getDepartmentName(departmentId: number) {
-    return departments.find((department) => department.id === departmentId)?.name ?? 'Sem departamento';
-  }
-
-  function handleTabChange(tab: CatalogTab) {
-    setActiveTab(tab);
-    setSearchTerm('');
-    setStatusFilter('Todos');
-    handleCloseForm();
-    setDeleteTarget(null);
-  }
 
   function handleOpenCreate() {
     setEditingItem(null);
@@ -214,7 +205,7 @@ export default function AdminCatalogs() {
       <section className="admin-users-content">
         <header className="admin-users-header">
           <div>
-            <h1>Departamentos e Sistemas</h1>
+            <h1>{isDepartmentsTab ? 'Departamentos' : 'Sistemas'}</h1>
           </div>
 
           <div className="header-actions">
@@ -245,27 +236,6 @@ export default function AdminCatalogs() {
         </section>
 
         <section className="users-section catalog-section">
-          <div className="catalog-tabs" role="tablist" aria-label="Cadastros administrativos">
-            <button
-              type="button"
-              className={`catalog-tab ${isDepartmentsTab ? 'active' : ''}`}
-              onClick={() => handleTabChange('departments')}
-              role="tab"
-              aria-selected={isDepartmentsTab}
-            >
-              Departamentos
-            </button>
-            <button
-              type="button"
-              className={`catalog-tab ${!isDepartmentsTab ? 'active' : ''}`}
-              onClick={() => handleTabChange('systems')}
-              role="tab"
-              aria-selected={!isDepartmentsTab}
-            >
-              Sistemas
-            </button>
-          </div>
-
           <div className="users-section-header catalog-section-header">
             <h2>{isDepartmentsTab ? 'Departamentos' : 'Sistemas'}</h2>
 
@@ -298,7 +268,7 @@ export default function AdminCatalogs() {
                 <tr>
                   <th>Nome</th>
                   <th>Descrição</th>
-                  <th>{isDepartmentsTab ? 'Responsável' : 'Departamento'}</th>
+                  {isDepartmentsTab && <th>Responsável</th>}
                   {!isDepartmentsTab && <th>URL</th>}
                   <th>Status</th>
                   <th>Ações</th>
@@ -306,16 +276,16 @@ export default function AdminCatalogs() {
               </thead>
               <tbody>
                 {filteredItems.map((item) => (
-                  <tr key={`${activeTab}-${item.id}`}>
+                  <tr key={`${mode}-${item.id}`}>
                     <td>
                       <strong className="catalog-name">{item.name}</strong>
                     </td>
                     <td>{item.description}</td>
-                    <td>
-                      <span className="department-badge">
-                        {'manager' in item ? item.manager : getDepartmentName(item.departmentId)}
-                      </span>
-                    </td>
+                    {'manager' in item && (
+                      <td>
+                        <span className="department-badge">{item.manager}</span>
+                      </td>
+                    )}
                     {'url' in item && (
                       <td>
                         <span className="catalog-url">{item.url}</span>
@@ -544,4 +514,12 @@ export default function AdminCatalogs() {
       )}
     </main>
   );
+}
+
+export default function AdminDepartments() {
+  return <AdminCatalogs mode="departments" />;
+}
+
+export function AdminSystems() {
+  return <AdminCatalogs mode="systems" />;
 }

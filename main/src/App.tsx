@@ -8,7 +8,7 @@ import Register from './pages/Register/Register';
 import Chat from './pages/Chat/Chat';
 import AdminUsers from './pages/AdminUsers/AdminUsers';
 import AdminDocuments from './pages/AdminDocuments/AdminDocuments';
-import AdminCatalogs from './pages/AdminCatalogs/AdminCatalogs';
+import AdminDepartments, { AdminSystems } from './pages/AdminCatalogs/AdminCatalogs';
 import AdminTokens from './pages/AdminTokens/AdminTokens';
 import DocumentTimeline from './pages/DocumentTimeline/DocumentTimeline';
 import ProfileEdit from './pages/ProfileEdit/ProfileEdit';
@@ -65,9 +65,21 @@ function App() {
         />
         <Route
           path="admin/catalogs"
+          element={<Navigate to="/admin/departments" replace />}
+        />
+        <Route
+          path="admin/departments"
           element={
             <ProtectedRoute allowedRoles={['2']}>
-              <AdminCatalogs />
+              <AdminDepartments />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/systems"
+          element={
+            <ProtectedRoute allowedRoles={['2']}>
+              <AdminSystems />
             </ProtectedRoute>
           }
         />

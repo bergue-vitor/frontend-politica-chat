@@ -82,9 +82,14 @@ export default function Sidebar() {
                 Gerenciamento de Usuários
               </NavLink>
 
-              <NavLink to="/admin/catalogs" className="sidebar-admin-link">
+              <NavLink to="/admin/departments" className="sidebar-admin-link">
                 <Layers3 size={17} strokeWidth={1.8} />
-                Departamentos e Sistemas
+                Departamentos
+              </NavLink>
+
+              <NavLink to="/admin/systems" className="sidebar-admin-link">
+                <Layers3 size={17} strokeWidth={1.8} />
+                Sistemas
               </NavLink>
 
               <NavLink to="/admin/tokens" className="sidebar-admin-link">
