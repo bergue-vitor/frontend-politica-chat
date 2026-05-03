@@ -138,8 +138,7 @@
   gap: 8px;
 }
 
-.login-field span,
-.login-profile-group legend {
+.login-field span {
   color: #cbd5e1;
   font-size: 0.78rem;
   font-weight: 700;
@@ -176,57 +175,6 @@
 
 .login-input-shell input::placeholder {
   color: #7f8a9d;
-}
-
-.login-profile-group {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-.login-profile-group legend {
-  grid-column: 1 / -1;
-  margin-bottom: 2px;
-}
-
-.login-profile-option {
-  min-height: 102px;
-  display: flex;
-  cursor: pointer;
-}
-
-.login-profile-option input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.login-profile-option span {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-  background: #12181e;
-  color: #8f9bb3;
-  font-size: 0.82rem;
-  line-height: 1.35;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.login-profile-option strong {
-  color: #f5f7fb;
-  font-size: 0.9rem;
-}
-
-.login-profile-option input:checked + span {
-  border-color: rgba(47, 125, 246, 0.68);
-  background: #172441;
 }
 
 .login-submit {
@@ -276,7 +224,4 @@
     padding: 24px;
   }
 
-  .login-profile-group {
-    grid-template-columns: 1fr;
-  }
 }

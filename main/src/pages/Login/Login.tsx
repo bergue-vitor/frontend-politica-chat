@@ -1,25 +1,20 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, LockKeyhole, Mail, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import './login.css';
 
-type LoginProfile = 'user' | 'admin';
-
 export default function Login() {
   const navigate = useNavigate();
-  const { loginAsAdmin, loginAsUser } = useAuth();
-  const [selectedProfile, setSelectedProfile] = useState<LoginProfile>('user');
+  const { login } = useAuth();
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (selectedProfile === 'admin') {
-      loginAsAdmin();
-    } else {
-      loginAsUser();
-    }
+    const formData = new FormData(event.currentTarget);
+    const email = String(formData.get('email') ?? '');
+    const password = String(formData.get('password') ?? '');
 
+    login({ email, password });
     navigate('/chat');
   }
 
@@ -54,13 +49,13 @@ export default function Login() {
         <form className="login-card" onSubmit={handleSubmit}>
           <header className="login-card-header">
             <h2>Entrar</h2>
-            <p>Escolha o perfil de acesso e continue para o assistente.</p>
+            <p>Acesse sua conta corporativa para continuar para o assistente.</p>
           </header>
 
           <label className="login-field">
             <span>E-mail corporativo</span>
             <div className="login-input-shell">
-              <input type="email" placeholder="nome@empresa.com" />
+              <input type="email" name="email" placeholder="nome@empresa.com" required />
               <Mail size={17} strokeWidth={1.8} />
             </div>
           </label>
@@ -68,42 +63,10 @@ export default function Login() {
           <label className="login-field">
             <span>Senha</span>
             <div className="login-input-shell">
-              <input type="password" placeholder="Digite sua senha" />
+              <input type="password" name="password" placeholder="Digite sua senha" required />
               <LockKeyhole size={17} strokeWidth={1.8} />
             </div>
           </label>
-
-          <fieldset className="login-profile-group">
-            <legend>Perfil</legend>
-
-            <label className="login-profile-option">
-              <input
-                type="radio"
-                name="profile"
-                value="user"
-                checked={selectedProfile === 'user'}
-                onChange={() => setSelectedProfile('user')}
-              />
-              <span>
-                <strong>Usuário comum</strong>
-                Acesso ao chat e consultas de políticas.
-              </span>
-            </label>
-
-            <label className="login-profile-option">
-              <input
-                type="radio"
-                name="profile"
-                value="admin"
-                checked={selectedProfile === 'admin'}
-                onChange={() => setSelectedProfile('admin')}
-              />
-              <span>
-                <strong>Administrador</strong>
-                Gerencia usuários, documentos e auditoria.
-              </span>
-            </label>
-          </fieldset>
 
           <button type="submit" className="login-submit">
             Entrar no assistente

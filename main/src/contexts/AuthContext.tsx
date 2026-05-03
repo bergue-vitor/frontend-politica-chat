@@ -12,6 +12,7 @@ interface User {
 interface AuthContextData {
   user: User;
   isAuthenticated: boolean;
+  login: (credentials: { email: string; password: string }) => void;
   loginAsAdmin: () => void;
   loginAsUser: () => void;
   updateProfile: (profile: Pick<User, 'name' | 'email'>) => void;
@@ -28,6 +29,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  function login(credentials: { email: string; password: string }) {
+    const normalizedEmail = credentials.email.trim().toLowerCase();
+
+    if (normalizedEmail === 'admin@email.com') {
+      loginAsAdmin();
+      return;
+    }
+
+    setUser({
+      name: 'User',
+      email: normalizedEmail || 'user@email.com',
+      role: '1',
+    });
+    setIsAuthenticated(true);
+  }
 
   function loginAsAdmin() {
     setUser({
@@ -62,6 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       user,
       isAuthenticated,
+      login,
       loginAsAdmin,
       loginAsUser,
       updateProfile,
