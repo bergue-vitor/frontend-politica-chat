@@ -149,16 +149,17 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.12);
   border-radius: 8px;
-  background: #12181e;
+  background: #0c141d;
   color: #8f9bb3;
   padding: 0 14px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .login-input-shell:focus-within {
   border-color: rgba(47, 125, 246, 0.72);
+  background: #0f1a27;
   box-shadow: 0 0 0 3px rgba(47, 125, 246, 0.14);
 }
 
@@ -167,14 +168,28 @@
   min-width: 0;
   border: 0;
   outline: 0;
-  background: transparent;
+  background: #0c141d;
   color: #f5f7fb;
   font: inherit;
   font-size: 0.92rem;
+  caret-color: #8bb9ff;
 }
 
 .login-input-shell input::placeholder {
   color: #7f8a9d;
+}
+
+.login-input-shell:focus-within input {
+  background: #0f1a27;
+}
+
+.login-input-shell input:-webkit-autofill,
+.login-input-shell input:-webkit-autofill:hover,
+.login-input-shell input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #f5f7fb;
+  caret-color: #8bb9ff;
+  box-shadow: 0 0 0 1000px #0c141d inset;
+  transition: background-color 9999s ease-in-out 0s;
 }
 
 .login-submit {
