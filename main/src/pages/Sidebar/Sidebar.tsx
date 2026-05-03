@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
-  ArrowRight,
-  Bot,
   FileText,
   Grid2X2,
   History,
@@ -10,7 +8,6 @@ import {
   Layers3,
   MessageSquare,
   Pencil,
-  Search,
   ShieldCheck,
   UserCog,
 } from 'lucide-react';
@@ -100,12 +97,8 @@ export default function Sidebar() {
                 Timeline de Documentos
               </NavLink>
             </nav>
-
-            <SourceSearch />
           </section>
         )}
-
-        {!isAdmin && <SourceSearch />}
 
         <section className="sidebar-history" aria-label="Histórico de conversas">
           <p className="sidebar-kicker">Histórico de Conversas</p>
@@ -140,24 +133,5 @@ export default function Sidebar() {
         </section>
       </div>
     </aside>
-  );
-}
-
-function SourceSearch() {
-  return (
-    <section className="sidebar-search-card" aria-label="Pesquisar fontes">
-      <label className="sidebar-search-field">
-        <Search size={17} strokeWidth={1.8} />
-        <span>Pesquise novas fontes na intranet</span>
-      </label>
-
-      <div className="sidebar-search-actions">
-        <button type="button" className="sidebar-go-button" aria-label="Pesquisar">
-          <ArrowRight size={16} strokeWidth={1.9} />
-        </button>
-      </div>
-
-      <Bot className="sidebar-search-watermark" size={20} strokeWidth={1.6} />
-    </section>
   );
 }

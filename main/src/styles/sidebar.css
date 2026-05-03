@@ -37,7 +37,6 @@
 
 .sidebar-brand,
 .sidebar-chat-icon,
-.sidebar-go-button,
 .sidebar-saved-icon {
   display: inline-flex;
   align-items: center;
@@ -193,73 +192,8 @@
   flex: 0 0 auto;
 }
 
-.sidebar-search-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 14px;
-  border-radius: 6px;
-  background: #0a1318;
-  overflow: hidden;
-}
-
-.sidebar-search-field {
-  display: grid;
-  grid-template-columns: 18px minmax(0, 1fr);
-  gap: 10px;
-  align-items: start;
-  color: rgba(223, 233, 238, 0.72);
-  font-size: 0.97rem;
-  line-height: 1.1;
-}
-
-.sidebar-search-field svg {
-  margin-top: 2px;
-  color: rgba(223, 233, 238, 0.74);
-}
-
-.sidebar-search-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
-}
-
-.sidebar-filter-button,
-.sidebar-go-button {
-  height: 34px;
-  border: 0;
-  border-radius: 10px;
-  background: #081116;
-  color: #edf4f7;
-  font: inherit;
-  cursor: pointer;
-}
-
-.sidebar-filter-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 10px;
-  font-size: 0.78rem;
-}
-
-.sidebar-go-button {
-  width: 38px;
-}
-
-.sidebar-filter-button:hover,
-.sidebar-go-button:hover,
 .sidebar-add-source:hover {
   background: #0e1b22;
-}
-
-.sidebar-search-watermark {
-  position: absolute;
-  right: 14px;
-  bottom: 13px;
-  color: rgba(255, 255, 255, 0.02);
-  pointer-events: none;
 }
 
 .sidebar-history {
