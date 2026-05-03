@@ -6,7 +6,6 @@ import {
   FileText,
   MoreVertical,
   Plus,
-  RefreshCcw,
   Search,
   TrendingUp,
   Zap,
@@ -92,7 +91,6 @@ export default function AdminTokens() {
   const [openActionId, setOpenActionId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   const [tokenAmount, setTokenAmount] = useState('');
 
   const remainingTokens = totalTokens - usedTokens;
@@ -182,14 +180,6 @@ export default function AdminTokens() {
           </div>
 
           <div className="header-actions">
-            <button
-              type="button"
-              className="token-action-btn token-action-btn-danger"
-              onClick={() => setIsResetModalOpen(true)}
-            >
-              <RefreshCcw size={15} />
-              Redefinir Limite
-            </button>
             <button
               type="button"
               className="primary-btn token-primary-btn"
@@ -476,48 +466,6 @@ export default function AdminTokens() {
         </div>
       )}
 
-      {isResetModalOpen && (
-        <div className="role-modal-backdrop" role="presentation">
-          <section
-            className="role-modal token-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="reset-modal-title"
-          >
-            <header className="role-modal-header">
-              <div>
-                <h2 id="reset-modal-title">Redefinir limite</h2>
-                <p>Esta ação volta o limite mensal para o padrão da franquia.</p>
-              </div>
-              <button
-                type="button"
-                className="role-modal-close"
-                onClick={() => setIsResetModalOpen(false)}
-                aria-label="Fechar"
-              >
-                x
-              </button>
-            </header>
-
-            <footer className="role-modal-actions">
-              <button
-                type="button"
-                className="secondary-btn"
-                onClick={() => setIsResetModalOpen(false)}
-              >
-                Cancelar
-              </button>
-              <button
-                type="button"
-                className="primary-btn danger-btn"
-                onClick={() => setIsResetModalOpen(false)}
-              >
-                Redefinir
-              </button>
-            </footer>
-          </section>
-        </div>
-      )}
     </main>
   );
 }
