@@ -18,6 +18,7 @@ type ApiKeyUsageRecord = {
   provider: AiProvider;
   apiKeyName: string;
   apiKeyPreview: string;
+  tokenLimit: number;
   tokens: number;
   date: string;
   dateValue: string;
@@ -29,6 +30,7 @@ const apiKeyUsageRecords: ApiKeyUsageRecord[] = [
     provider: 'GPT',
     apiKeyName: 'GPT Produção',
     apiKeyPreview: 'sk-prod-****-8A21',
+    tokenLimit: 4000000,
     tokens: 2864000,
     date: '10 Out 2026, 14:35',
     dateValue: '2026-10-10T14:35:00',
@@ -38,6 +40,7 @@ const apiKeyUsageRecords: ApiKeyUsageRecord[] = [
     provider: 'Claude',
     apiKeyName: 'Claude Jurídico',
     apiKeyPreview: 'sk-ant-****-4F19',
+    tokenLimit: 3000000,
     tokens: 2152800,
     date: '10 Out 2026, 11:20',
     dateValue: '2026-10-10T11:20:00',
@@ -47,6 +50,7 @@ const apiKeyUsageRecords: ApiKeyUsageRecord[] = [
     provider: 'GPT',
     apiKeyName: 'GPT Homologação',
     apiKeyPreview: 'sk-hml-****-72BC',
+    tokenLimit: 1500000,
     tokens: 996500,
     date: '09 Out 2026, 17:05',
     dateValue: '2026-10-09T17:05:00',
@@ -56,6 +60,7 @@ const apiKeyUsageRecords: ApiKeyUsageRecord[] = [
     provider: 'Gemini',
     apiKeyName: 'Gemini Pesquisa',
     apiKeyPreview: 'gm-****-91DA',
+    tokenLimit: 1000000,
     tokens: 584200,
     date: '09 Out 2026, 09:45',
     dateValue: '2026-10-09T09:45:00',
@@ -263,7 +268,7 @@ export default function AdminTokens() {
                   <th>IA</th>
                   <th>API Key</th>
                   <th>Tokens consumidos</th>
-                  <th>Último consumo</th>
+                  <th>Tokens da API Key</th>
                 </tr>
               </thead>
               <tbody>
@@ -293,7 +298,7 @@ export default function AdminTokens() {
                     <td>
                       <strong className="token-count">{formatTokens(record.tokens)}</strong>
                     </td>
-                    <td>{record.date}</td>
+                    <td>{formatTokens(record.tokenLimit)}</td>
                   </tr>
                 ))}
               </tbody>
