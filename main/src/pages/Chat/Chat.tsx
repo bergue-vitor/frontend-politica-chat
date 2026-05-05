@@ -29,9 +29,7 @@ export default function Chat() {
   return (
     <main className={`chat-page ${isAdmin ? 'admin' : 'user'}`}>
       <section className="chat-main">
-        <ChatHeader
-          badgeLabel={isAdmin ? 'Área administrativa' : 'Área do usuário'}
-        />
+        <ChatHeader />
 
         <div className="chat-content">
           {hasMessages ? (

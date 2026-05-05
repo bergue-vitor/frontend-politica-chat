@@ -1,13 +1,9 @@
 import { useState } from 'react';
-import { Check, Copy, EllipsisVertical, History, Share2, X } from 'lucide-react';
-
-interface ChatHeaderProps {
-  badgeLabel: string;
-}
+import { Check, Copy, Share2, X } from 'lucide-react';
 
 type SharePermission = 'read' | 'edit';
 
-export function ChatHeader({ badgeLabel }: ChatHeaderProps) {
+export function ChatHeader() {
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [permission, setPermission] = useState<SharePermission>('read');
   const [generatedLink, setGeneratedLink] = useState('');
@@ -42,7 +38,6 @@ export function ChatHeader({ badgeLabel }: ChatHeaderProps) {
     <header className="chat-header">
       <div className="chat-header-main">
         <h1 className="chat-header-title">Assistente de Políticas</h1>
-        <span className="chat-header-badge">{badgeLabel}</span>
       </div>
 
       <div className="chat-header-actions" aria-label="Ações do chat">
@@ -54,12 +49,6 @@ export function ChatHeader({ badgeLabel }: ChatHeaderProps) {
           title="Compartilhar"
         >
           <Share2 size={16} />
-        </button>
-        <button type="button" className="chat-icon-button" aria-label="Histórico">
-          <History size={16} />
-        </button>
-        <button type="button" className="chat-icon-button" aria-label="Mais opções">
-          <EllipsisVertical size={16} />
         </button>
       </div>
 
