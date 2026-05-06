@@ -292,8 +292,91 @@
 
 @media (max-width: 900px) {
   .sidebar {
-    width: 292px;
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 40;
+    width: min(86vw, 320px);
+    height: 100dvh;
     padding: 28px 18px 22px;
     border-width: 6px;
+    border-left-width: 6px;
+    border-radius: 0 14px 14px 0;
+    box-shadow: 18px 0 46px rgba(0, 0, 0, 0.34);
+    transition: width 0.24s ease, padding 0.24s ease, box-shadow 0.24s ease;
+  }
+
+  .sidebar.collapsed {
+    width: 76px;
+    padding: 24px 12px 18px;
+    box-shadow: none;
+  }
+
+  .sidebar.mobile:not(.collapsed) .sidebar-top-icons {
+    grid-template-columns: 1fr 1fr;
+    justify-items: stretch;
+    gap: 0;
+    padding: 0 8px;
+  }
+
+  .sidebar.mobile:not(.collapsed) .sidebar-chat-icon {
+    justify-self: end;
+  }
+
+  .sidebar.mobile.collapsed .sidebar-top-icons {
+    gap: 14px;
+  }
+
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 35;
+    border: 0;
+    padding: 0;
+    background: rgba(3, 10, 18, 0.58);
+    backdrop-filter: blur(4px);
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 640px) {
+  .sidebar {
+    width: min(88vw, 304px);
+    padding: 22px 14px 18px;
+  }
+
+  .sidebar.collapsed {
+    width: 68px;
+    padding-inline: 10px;
+  }
+
+  .sidebar-brand,
+  .sidebar-chat-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .sidebar-content {
+    gap: 14px;
+  }
+
+  .sidebar-admin-panel,
+  .sidebar-profile-card {
+    padding: 12px;
+  }
+
+  .sidebar-admin-nav,
+  .sidebar-history-list {
+    gap: 8px;
+  }
+
+  .sidebar-add-source,
+  .sidebar-admin-link,
+  .sidebar-history-link,
+  .sidebar-profile-link {
+    font-size: 0.82rem;
+  }
+
+  .sidebar-saved-empty {
+    padding-top: 24px;
   }
 }
