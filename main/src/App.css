@@ -55,3 +55,20 @@
   background: #000;
   color: white;
 }
+
+@media (max-width: 900px) {
+  .dashboard-layout {
+    padding-left: 76px;
+  }
+
+  .dashboard-main,
+  .dashboard-page {
+    height: 100dvh;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-layout {
+    padding-left: 68px;
+  }
+}

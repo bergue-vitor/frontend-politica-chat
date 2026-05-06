@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import {
   FileText,
   Grid2X2,
@@ -22,32 +22,63 @@ const conversationHistory = [
 
 export default function Sidebar() {
   const { user } = useAuth();
+  const location = useLocation();
   const isAdmin = user.role === '2';
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 900px)');
+
+    function handleViewportChange() {
+      setIsMobile(mediaQuery.matches);
+      setIsCollapsed(mediaQuery.matches);
+    }
+
+    handleViewportChange();
+    mediaQuery.addEventListener('change', handleViewportChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleViewportChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) {
+      setIsCollapsed(true);
+    }
+  }, [isMobile, location.pathname]);
+
+  const sidebarClassName = [
+    'sidebar',
+    isCollapsed ? 'collapsed' : '',
+    isMobile ? 'mobile' : '',
+  ].filter(Boolean).join(' ');
 
   return (
-    <aside
-      className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}
-      aria-label="Navegação principal"
-    >
-      <div className="sidebar-top-icons">
-        <NavLink to="/chat" className="sidebar-brand" aria-label="Ir para o chat">
-          <ShieldCheck size={20} strokeWidth={1.8} />
-        </NavLink>
+    <>
+      <aside
+        className={sidebarClassName}
+        aria-label="Navegação principal"
+      >
+        <div className="sidebar-top-icons">
+          <NavLink to="/chat" className="sidebar-brand" aria-label="Ir para o chat">
+            <ShieldCheck size={20} strokeWidth={1.8} />
+          </NavLink>
 
-        <button
-          type="button"
-          className="sidebar-chat-icon"
-          onClick={() => setIsCollapsed((current) => !current)}
-          aria-label={isCollapsed ? 'Abrir sidebar' : 'Fechar sidebar'}
-          aria-expanded={!isCollapsed}
-        >
-          <MessageSquare size={19} strokeWidth={1.8} />
-        </button>
-      </div>
+          <button
+            type="button"
+            className="sidebar-chat-icon"
+            onClick={() => setIsCollapsed((current) => !current)}
+            aria-label={isCollapsed ? 'Abrir sidebar' : 'Fechar sidebar'}
+            aria-expanded={!isCollapsed}
+          >
+            <MessageSquare size={19} strokeWidth={1.8} />
+          </button>
+        </div>
 
-      <div className="sidebar-content" aria-hidden={isCollapsed}>
-        <div className="sidebar-divider" />
+        <div className="sidebar-content" aria-hidden={isCollapsed}>
+          <div className="sidebar-divider" />
 
         <section className="sidebar-section sidebar-sources">
           <NavLink
@@ -136,7 +167,17 @@ export default function Sidebar() {
             Editar perfil
           </NavLink>
         </section>
-      </div>
-    </aside>
+        </div>
+      </aside>
+
+      {isMobile && !isCollapsed && (
+        <button
+          type="button"
+          className="sidebar-backdrop"
+          aria-label="Fechar sidebar"
+          onClick={() => setIsCollapsed(true)}
+        />
+      )}
+    </>
   );
 }
