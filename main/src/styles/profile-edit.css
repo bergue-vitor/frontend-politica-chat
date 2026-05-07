@@ -1,158 +1,102 @@
-.profile-page {
-  flex: 1;
-  min-height: 100vh;
-  width: 100%;
-  overflow-y: auto;
-  padding: 24px 28px;
-  background: linear-gradient(180deg, #071425 0%, #081528 100%);
-  color: #f5f7fb;
-}
-
-.profile-content {
-  width: min(100%, 760px);
-}
-
-.profile-header {
-  margin-bottom: 20px;
-}
-
-.profile-kicker {
-  display: block;
-  margin-bottom: 8px;
-  color: #8f9bb3;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.profile-header h1 {
-  margin: 0;
-  font-size: 2rem;
-  line-height: 1.1;
-  color: #f5f7fb;
-}
-
-.profile-card {
-  display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
-  gap: 22px;
-  padding: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  background: #0e1c33;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
-}
-
-.profile-avatar {
-  width: 72px;
-  height: 72px;
-  display: inline-flex;
+/* Links rodapé do card */
+.login-footer-links {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  border-radius: 14px;
-  background: #172441;
-  color: #edf4f7;
-}
-
-.profile-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.profile-field {
-  display: flex;
-  flex-direction: column;
   gap: 8px;
+  margin-top: 4px;
 }
 
-.profile-field span {
-  color: #8f9bb3;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.profile-input-shell {
-  min-height: 46px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  background: #0b1730;
-  color: #a8b3c7;
-  padding: 0 14px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.profile-input-shell:focus-within {
-  border-color: rgba(47, 125, 246, 0.7);
-  box-shadow: 0 0 0 3px rgba(47, 125, 246, 0.15);
-}
-
-.profile-input-shell.readonly {
-  background: rgba(148, 163, 184, 0.12);
-}
-
-.profile-input-shell input {
-  width: 100%;
-  min-width: 0;
-  border: 0;
-  outline: 0;
+.login-link {
   background: transparent;
-  color: #f5f7fb;
-  font: inherit;
+  border: none;
+  color: #8f9bb3;
+  font-size: 0.88rem;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
 }
 
-.profile-actions {
+.login-link:hover {
+  color: #f5f7fb;
+}
+
+/* Modal solicitar acesso */
+.login-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 14px;
-  padding-top: 6px;
+  justify-content: center;
+  background: rgba(3, 10, 20, 0.78);
+  backdrop-filter: blur(8px);
+  padding: 24px;
 }
 
-.profile-saved {
-  color: #22c55e;
-  font-size: 0.92rem;
+.login-modal {
+  position: relative;
+  width: min(100%, 440px);
+  background: #0f1822;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 32px 28px 28px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
 }
 
-.profile-save-button {
-  min-height: 44px;
-  display: inline-flex;
+.login-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 30px;
+  height: 30px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  border: 0;
-  border-radius: 10px;
-  padding: 0 18px;
-  background: #2f7df6;
-  color: #fff;
-  font: inherit;
-  font-size: 0.95rem;
-  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+  border: none;
+  border-radius: 8px;
+  color: #8f9bb3;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background 0.15s, color 0.15s;
 }
 
-.profile-save-button:hover {
-  background: #3c87fa;
+.login-modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f5f7fb;
 }
 
-@media (max-width: 640px) {
-  .profile-page {
-    padding: 20px;
-  }
+.login-modal-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #f5f7fb;
+  margin: 0 0 8px;
+}
 
-  .profile-card {
-    grid-template-columns: 1fr;
-  }
+.login-modal-desc {
+  font-size: 0.88rem;
+  color: #2f7df6;
+  line-height: 1.5;
+  margin: 0 0 22px;
+}
 
-  .profile-actions {
-    align-items: stretch;
-    flex-direction: column;
-  }
+.login-modal-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.login-modal-success p {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #22c55e;
+  margin: 0;
+}
+
+.login-modal-success span {
+  font-size: 0.88rem;
+  color: #8f9bb3;
 }
