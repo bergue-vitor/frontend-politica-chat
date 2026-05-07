@@ -47,19 +47,6 @@ const mockUsers: User[] = [
   },
 ];
 
-interface AccessRequest {
-  id: number;
-  name: string;
-  email: string;
-}
-
-const mockRequests: AccessRequest[] = [
-  { id: 1, name: 'Carlos Oliveira', email: 'carlos.oliveira@empresa.com' },
-  { id: 2, name: 'Mariana Silva', email: 'mariana.silva@empresa.com' },
-  { id: 3, name: 'Roberto Gomes', email: 'roberto.gomes@empresa.com' },
-  { id: 4, name: 'Juliana Martins', email: 'juliana.martins@empresa.com' },
-];
-
 export default function AdminUsers() {
   const [users, setUsers] = useState<User[]>(mockUsers);
   const [search, setSearch] = useState('');
@@ -72,8 +59,6 @@ export default function AdminUsers() {
   const [inviteName, setInviteName] = useState('');
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState<UserRole>('Default');
-  const [isRequestsModalOpen, setIsRequestsModalOpen] = useState(false);
-  const [requests, setRequests] = useState<AccessRequest[]>(mockRequests);
 
   const filteredUsers = useMemo(() => {
     return users.filter((user) => {
@@ -146,26 +131,6 @@ export default function AdminUsers() {
     handleCloseInviteModal();
   }
 
-  function handleAcceptRequest(id: number) {
-    const req = requests.find((r) => r.id === id);
-    if (req) {
-      const nextUser: User = {
-        id: Math.max(...users.map((u) => u.id), 0) + 1,
-        name: req.name,
-        email: req.email,
-        department: 'Não informado',
-        role: 'Default',
-        status: 'Ativo',
-      };
-      setUsers((current) => [nextUser, ...current]);
-    }
-    setRequests((current) => current.filter((r) => r.id !== id));
-  }
-
-  function handleRejectRequest(id: number) {
-    setRequests((current) => current.filter((r) => r.id !== id));
-  }
-
   return (
     <main className="admin-users-page">
       <section className="admin-users-content">
@@ -175,16 +140,6 @@ export default function AdminUsers() {
           </div>
 
           <div className="header-actions">
-            <button
-              type="button"
-              className="secondary-btn requests-btn"
-              onClick={() => setIsRequestsModalOpen(true)}
-            >
-              Solicitações
-              {requests.length > 0 && (
-                <span className="requests-badge">{requests.length}</span>
-              )}
-            </button>
             <button
               type="button"
               className="primary-btn"
@@ -243,69 +198,6 @@ export default function AdminUsers() {
         </section>
       </section>
 
-      {/* Modal Solicitações de Acesso */}
-      {isRequestsModalOpen && (
-        <div
-          className="role-modal-backdrop"
-          role="presentation"
-          onClick={() => setIsRequestsModalOpen(false)}
-        >
-          <section
-            className="role-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="requests-modal-title"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <header className="role-modal-header">
-              <div>
-                <h2 id="requests-modal-title">Solicitações de Acesso</h2>
-              </div>
-              <button
-                type="button"
-                className="role-modal-close"
-                onClick={() => setIsRequestsModalOpen(false)}
-                aria-label="Fechar"
-              >
-                x
-              </button>
-            </header>
-
-            {requests.length === 0 ? (
-              <p className="requests-empty">Nenhuma solicitação pendente.</p>
-            ) : (
-              <div className="requests-list">
-                {requests.map((req) => (
-                  <div key={req.id} className="request-item">
-                    <div className="request-info">
-                      <strong className="request-name">{req.name}</strong>
-                      <span className="request-email">{req.email}</span>
-                    </div>
-                    <div className="request-actions">
-                      <button
-                        type="button"
-                        className="request-btn reject"
-                        onClick={() => handleRejectRequest(req.id)}
-                      >
-                        ✕ Recusar
-                      </button>
-                      <button
-                        type="button"
-                        className="request-btn accept"
-                        onClick={() => handleAcceptRequest(req.id)}
-                      >
-                        ✓ Aceitar
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </section>
-        </div>
-      )}
-
-      {/* Modal Editar Papel — idêntico ao original */}
       {editingUser && (
         <div className="role-modal-backdrop" role="presentation">
           <section
@@ -419,7 +311,6 @@ export default function AdminUsers() {
         </div>
       )}
 
-      {/* Modal Convidar — idêntico ao original */}
       {isInviteModalOpen && (
         <div className="role-modal-backdrop" role="presentation">
           <form
