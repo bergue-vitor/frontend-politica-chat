@@ -1,3 +1,6 @@
+
+
+
 .login-page {
   min-height: 100vh;
   display: grid;
@@ -239,4 +242,85 @@
     padding: 24px;
   }
 
+}
+
+.login-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.login-modal {
+  width: 100%;
+  max-width: 480px;
+  background: #0f151b;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 28px;
+  position: relative;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.45);
+}
+
+.login-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #8f9bb3;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-modal-close:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #f5f7fb;
+}
+
+.login-modal-title {
+  color: #f5f7fb;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.login-modal-desc {
+  color: #8f9bb3;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+
+.login-modal-success {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+  padding: 24px 10px;
+}
+
+.login-modal-success p {
+  color: #22c55e;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.login-modal-success span {
+  color: #8f9bb3;
+  font-size: 0.92rem;
+}
+.login-footer-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
