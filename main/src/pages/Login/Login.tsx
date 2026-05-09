@@ -95,7 +95,7 @@ export default function Login() {
           <div className="login-footer-links">
             <button type="button" className="login-link">Esqueci minha senha</button>
             <button type="button" className="login-link" onClick={() => setIsRequestOpen(true)}>
-              solicitar acesso
+              Solicitar Acesso
             </button>
           </div>
         </form>
