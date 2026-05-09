@@ -197,6 +197,7 @@
 
 .login-submit {
   height: 46px;
+  width: 100%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
