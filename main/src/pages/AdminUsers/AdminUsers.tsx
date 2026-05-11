@@ -58,6 +58,8 @@ const mockRequests: AccessRequest[] = [
   { id: 2, name: 'Mariana Silva', email: 'mariana.silva@empresa.com' },
   { id: 3, name: 'Roberto Gomes', email: 'roberto.gomes@empresa.com' },
   { id: 4, name: 'Juliana Martins', email: 'juliana.martins@empresa.com' },
+  { id: 5, name: 'Junior Santos', email: 'junior.santos@empresa.com' },
+  { id: 6, name: 'Gabriel Martins', email: 'gabriel.martins@empresa.com' },
 ];
 
 export default function AdminUsers() {
