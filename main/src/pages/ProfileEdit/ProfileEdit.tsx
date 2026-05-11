@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Lock, ArrowLeft, Save, Eye, EyeOff } from 'lucide-react';
+import { User, Mail, Lock, ArrowLeft, Save, Eye, EyeOff, X } from 'lucide-react';
 import '../../styles/profile-edit.css';
 
 export default function ProfileEdit() {
@@ -10,25 +10,55 @@ export default function ProfileEdit() {
 
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
+  const [saved, setSaved] = useState(false);
+
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [error, setError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSaved, setPasswordSaved] = useState(false);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    if (newPassword && newPassword !== confirmPassword) {
-      setError('As senhas não coincidem.');
-      return;
-    }
     updateProfile({ name, email });
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
+  };
+
+  const handleCloseModal = () => {
+    setShowPasswordModal(false);
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+    setPasswordError('');
+    setPasswordSaved(false);
+    setShowCurrent(false);
+    setShowNew(false);
+    setShowConfirm(false);
+  };
+
+  const handleSavePassword = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordError('');
+    if (!currentPassword) {
+      setPasswordError('Informe a senha atual.');
+      return;
+    }
+    if (!newPassword) {
+      setPasswordError('Informe a nova senha.');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordError('As senhas não coincidem.');
+      return;
+    }
+    // updatePassword(currentPassword, newPassword) — chame sua função aqui
+    setPasswordSaved(true);
+    setTimeout(() => handleCloseModal(), 2000);
   };
 
   return (
@@ -75,41 +105,14 @@ export default function ProfileEdit() {
           </div>
 
           <div className="profile-card">
-            <h2 className="profile-card-title">Alterar Senha</h2>
-            <p className="profile-card-desc">Deixe em branco para manter a senha atual</p>
-            <div className="profile-field">
-              <label className="profile-label">Senha atual</label>
-              <div className="profile-input-wrapper">
-                <Lock size={15} className="profile-input-icon" />
-                <input type={showCurrent ? 'text' : 'password'} className="profile-input" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} placeholder="••••••••" />
-                <button type="button" className="profile-eye-btn" onClick={() => setShowCurrent(o => !o)}>
-                  {showCurrent ? <EyeOff size={14} /> : <Eye size={14} />}
-                </button>
-              </div>
-            </div>
-            <div className="profile-field">
-              <label className="profile-label">Nova senha</label>
-              <div className="profile-input-wrapper">
-                <Lock size={15} className="profile-input-icon" />
-                <input type={showNew ? 'text' : 'password'} className="profile-input" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="••••••••" />
-                <button type="button" className="profile-eye-btn" onClick={() => setShowNew(o => !o)}>
-                  {showNew ? <EyeOff size={14} /> : <Eye size={14} />}
-                </button>
-              </div>
-            </div>
-            <div className="profile-field">
-              <label className="profile-label">Confirmar nova senha</label>
-              <div className="profile-input-wrapper">
-                <Lock size={15} className="profile-input-icon" />
-                <input type={showConfirm ? 'text' : 'password'} className="profile-input" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="••••••••" />
-                <button type="button" className="profile-eye-btn" onClick={() => setShowConfirm(o => !o)}>
-                  {showConfirm ? <EyeOff size={14} /> : <Eye size={14} />}
-                </button>
-              </div>
-            </div>
+            <h2 className="profile-card-title">Senha</h2>
+            <p className="profile-card-desc">Mantenha sua conta segura com uma senha forte</p>
+            <button type="button" className="profile-btn-change-password" onClick={() => setShowPasswordModal(true)}>
+              <Lock size={14} />
+              Alterar senha
+            </button>
           </div>
 
-          {error && <p className="profile-error">{error}</p>}
           {saved && <div className="profile-success">Perfil atualizado com sucesso!</div>}
 
           <div className="profile-actions">
@@ -121,6 +124,69 @@ export default function ProfileEdit() {
           </div>
         </form>
       </div>
+
+      {/* ── Modal: Alterar Senha ── */}
+      {showPasswordModal && (
+        <div className="profile-modal-overlay" onClick={handleCloseModal}>
+          <div className="profile-modal" onClick={e => e.stopPropagation()}>
+            <div className="profile-modal-header">
+              <div className="profile-modal-title-group">
+                <div className="profile-modal-icon">
+                  <Lock size={18} />
+                </div>
+                <h2 className="profile-modal-title">Alterar Senha</h2>
+              </div>
+              <button type="button" className="profile-modal-close" onClick={handleCloseModal}>
+                <X size={16} />
+              </button>
+            </div>
+
+            <form className="profile-modal-form" onSubmit={handleSavePassword}>
+              <div className="profile-field">
+                <label className="profile-label">Senha atual</label>
+                <div className="profile-input-wrapper">
+                  <Lock size={15} className="profile-input-icon" />
+                  <input type={showCurrent ? 'text' : 'password'} className="profile-input" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} placeholder="••••••••" />
+                  <button type="button" className="profile-eye-btn" onClick={() => setShowCurrent(o => !o)}>
+                    {showCurrent ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
+              </div>
+              <div className="profile-field">
+                <label className="profile-label">Nova senha</label>
+                <div className="profile-input-wrapper">
+                  <Lock size={15} className="profile-input-icon" />
+                  <input type={showNew ? 'text' : 'password'} className="profile-input" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="••••••••" />
+                  <button type="button" className="profile-eye-btn" onClick={() => setShowNew(o => !o)}>
+                    {showNew ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
+              </div>
+              <div className="profile-field">
+                <label className="profile-label">Confirmar nova senha</label>
+                <div className="profile-input-wrapper">
+                  <Lock size={15} className="profile-input-icon" />
+                  <input type={showConfirm ? 'text' : 'password'} className="profile-input" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="••••••••" />
+                  <button type="button" className="profile-eye-btn" onClick={() => setShowConfirm(o => !o)}>
+                    {showConfirm ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
+              </div>
+
+              {passwordError && <p className="profile-error">{passwordError}</p>}
+              {passwordSaved && <div className="profile-success">Senha alterada com sucesso!</div>}
+
+              <div className="profile-modal-actions">
+                <button type="button" className="profile-btn-cancel" onClick={handleCloseModal}>Cancelar</button>
+                <button type="submit" className="profile-btn-save" disabled={passwordSaved}>
+                  <Save size={15} />
+                  Salvar senha
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
