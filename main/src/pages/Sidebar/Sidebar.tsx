@@ -7,6 +7,8 @@ import {
   KeyRound,
   Layers3,
   MessageSquare,
+  PanelLeftClose,
+  PanelLeftOpen,
   Pencil,
   ShieldCheck,
   UserCog,
@@ -73,7 +75,11 @@ export default function Sidebar() {
             aria-label={isCollapsed ? 'Abrir sidebar' : 'Fechar sidebar'}
             aria-expanded={!isCollapsed}
           >
-            <MessageSquare size={19} strokeWidth={1.8} />
+            {isCollapsed ? (
+              <PanelLeftOpen size={19} strokeWidth={1.8} />
+            ) : (
+              <PanelLeftClose size={19} strokeWidth={1.8} />
+            )}
           </button>
         </div>
 
