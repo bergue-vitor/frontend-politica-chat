@@ -11,13 +11,6 @@ Interface web de um assistente de chat com inteligência artificial voltado para
 
 ---
 
-## Status do projeto
-
-O frontend está em desenvolvimento e atualmente usa dados mockados em algumas telas.
-A integração com backend/API ainda será adicionada.
-
----
-
 ## Tecnologias
 
 - [React 19](https://react.dev/)
