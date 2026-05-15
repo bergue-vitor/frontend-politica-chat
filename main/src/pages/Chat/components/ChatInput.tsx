@@ -1,5 +1,6 @@
-import { ArrowRight, Building2, MonitorCog } from 'lucide-react';
+import { ArrowRight, Bot, Building2, MonitorCog } from 'lucide-react';
 import type { KeyboardEvent } from 'react';
+import type { AiProvider } from '../types/chat.types';
 
 interface ChatInputProps {
   value: string;
@@ -13,6 +14,9 @@ interface ChatInputProps {
   selectedSystems?: string[];
   systems: string[];
   onSystemsChange: (systems: string[]) => void;
+  selectedAiProvider: AiProvider;
+  aiProviders: AiProvider[];
+  onAiProviderChange: (provider: AiProvider) => void;
 }
 
 export function ChatInput({
@@ -27,6 +31,9 @@ export function ChatInput({
   selectedSystems = ['Todos os sistemas'],
   systems,
   onSystemsChange,
+  selectedAiProvider,
+  aiProviders,
+  onAiProviderChange,
 }: ChatInputProps) {
   const departmentSummary = getSelectionSummary(selectedDepartments, departments[0]);
   const systemSummary = getSelectionSummary(selectedSystems, systems[0]);
@@ -94,6 +101,27 @@ export function ChatInput({
           </div>
         </details>
 
+        <details className="chat-filter-menu">
+          <summary className="chat-department-filter" title="Escolher IA para responder">
+            <Bot size={15} />
+            <span>{selectedAiProvider}</span>
+          </summary>
+
+          <div className="chat-filter-options chat-provider-options">
+            {aiProviders.map((provider) => (
+              <label className="chat-filter-option" key={provider}>
+                <input
+                  type="radio"
+                  name="chat-ai-provider"
+                  checked={selectedAiProvider === provider}
+                  onChange={() => onAiProviderChange(provider)}
+                />
+                <span>{provider}</span>
+              </label>
+            ))}
+          </div>
+        </details>
+
         <textarea
           className="chat-input"
           value={value}
@@ -109,7 +137,7 @@ export function ChatInput({
 
         <div className="chat-input-actions">
           <span className="chat-sources-counter">
-            {departmentSummary} · {systemSummary} · {sourcesCount} fontes
+            {selectedAiProvider} · {departmentSummary} · {systemSummary} · {sourcesCount} fontes
           </span>
 
           <button
