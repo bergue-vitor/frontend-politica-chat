@@ -1,5 +1,6 @@
-import { ArrowRight, Building2 } from 'lucide-react';
+import { ArrowRight, Bot, Building2, MonitorCog } from 'lucide-react';
 import type { KeyboardEvent } from 'react';
+import type { AiProvider } from '../types/chat.types';
 
 interface ChatInputProps {
   value: string;
@@ -7,9 +8,15 @@ interface ChatInputProps {
   onSend: () => void;
   isSending?: boolean;
   sourcesCount?: number;
-  selectedDepartment?: string;
+  selectedDepartments?: string[];
   departments: string[];
-  onDepartmentChange: (department: string) => void;
+  onDepartmentsChange: (departments: string[]) => void;
+  selectedSystems?: string[];
+  systems: string[];
+  onSystemsChange: (systems: string[]) => void;
+  selectedAiProvider: AiProvider;
+  aiProviders: AiProvider[];
+  onAiProviderChange: (provider: AiProvider) => void;
 }
 
 export function ChatInput({
@@ -18,10 +25,24 @@ export function ChatInput({
   onSend,
   isSending = false,
   sourcesCount = 0,
-  selectedDepartment = 'Todos os departamentos',
+  selectedDepartments = ['Todos os departamentos'],
   departments,
-  onDepartmentChange,
+  onDepartmentsChange,
+  selectedSystems = ['Todos os sistemas'],
+  systems,
+  onSystemsChange,
+  selectedAiProvider,
+  aiProviders,
+  onAiProviderChange,
 }: ChatInputProps) {
+  const departmentSummary = getSelectionSummary(selectedDepartments, departments[0]);
+  const systemSummary = getSelectionSummary(selectedSystems, systems[0]);
+  const activeFilters = [
+    ...selectedDepartments.filter((department) => department !== departments[0]),
+    ...selectedSystems.filter((system) => system !== systems[0]),
+  ];
+  const placeholderTarget = activeFilters.join(' / ');
+
   function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
@@ -29,24 +50,77 @@ export function ChatInput({
     }
   }
 
+  function handleDepartmentChange(department: string) {
+    onDepartmentsChange(getNextSelection(selectedDepartments, department, departments[0]));
+  }
+
+  function handleSystemChange(system: string) {
+    onSystemsChange(getNextSelection(selectedSystems, system, systems[0]));
+  }
+
   return (
     <div className="chat-input-shell">
       <div className="chat-input-wrapper">
-        <label className="chat-department-filter">
-          <Building2 size={15} />
-          <select
-            value={selectedDepartment}
-            onChange={(event) => onDepartmentChange(event.target.value)}
-            aria-label="Limitar respostas ao departamento"
-            title="Limitar respostas ao departamento"
-          >
+        <details className="chat-filter-menu">
+          <summary className="chat-department-filter" title="Limitar respostas por departamento">
+            <Building2 size={15} />
+            <span>{departmentSummary}</span>
+          </summary>
+
+          <div className="chat-filter-options">
             {departments.map((department) => (
-              <option value={department} key={department}>
-                {department}
-              </option>
+              <label className="chat-filter-option" key={department}>
+                <input
+                  type="checkbox"
+                  checked={selectedDepartments.includes(department)}
+                  onChange={() => handleDepartmentChange(department)}
+                />
+                <span>{department}</span>
+              </label>
             ))}
-          </select>
-        </label>
+          </div>
+        </details>
+
+        <details className="chat-filter-menu">
+          <summary className="chat-department-filter" title="Limitar respostas por sistema">
+            <MonitorCog size={15} />
+            <span>{systemSummary}</span>
+          </summary>
+
+          <div className="chat-filter-options">
+            {systems.map((system) => (
+              <label className="chat-filter-option" key={system}>
+                <input
+                  type="checkbox"
+                  checked={selectedSystems.includes(system)}
+                  onChange={() => handleSystemChange(system)}
+                />
+                <span>{system}</span>
+              </label>
+            ))}
+          </div>
+        </details>
+
+        <details className="chat-filter-menu">
+          <summary className="chat-department-filter" title="Escolher IA para responder">
+            <Bot size={15} />
+            <span>{selectedAiProvider}</span>
+          </summary>
+
+          <div className="chat-filter-options chat-provider-options">
+            {aiProviders.map((provider) => (
+              <label className="chat-filter-option" key={provider}>
+                <input
+                  type="radio"
+                  name="chat-ai-provider"
+                  checked={selectedAiProvider === provider}
+                  onChange={() => onAiProviderChange(provider)}
+                />
+                <span>{provider}</span>
+              </label>
+            ))}
+          </div>
+        </details>
 
         <textarea
           className="chat-input"
@@ -54,16 +128,16 @@ export function ChatInput({
           onChange={(event) => onChange(event.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={
-            selectedDepartment === 'Todos os departamentos'
+            activeFilters.length === 0
               ? 'Faça uma pergunta...'
-              : `Faça uma pergunta sobre ${selectedDepartment}...`
+              : `Faça uma pergunta sobre ${placeholderTarget}...`
           }
           rows={1}
         />
 
         <div className="chat-input-actions">
           <span className="chat-sources-counter">
-            {selectedDepartment} · {sourcesCount} fontes
+            {selectedAiProvider} · {departmentSummary} · {systemSummary} · {sourcesCount} fontes
           </span>
 
           <button
@@ -79,4 +153,31 @@ export function ChatInput({
       </div>
     </div>
   );
+}
+
+function getNextSelection(currentSelection: string[], selectedOption: string, allOption: string) {
+  if (selectedOption === allOption) {
+    return [allOption];
+  }
+
+  const withoutAllOption = currentSelection.filter((option) => option !== allOption);
+  const nextSelection = withoutAllOption.includes(selectedOption)
+    ? withoutAllOption.filter((option) => option !== selectedOption)
+    : [...withoutAllOption, selectedOption];
+
+  return nextSelection.length > 0 ? nextSelection : [allOption];
+}
+
+function getSelectionSummary(selection: string[], allOption: string) {
+  const selectedItems = selection.filter((option) => option !== allOption);
+
+  if (selectedItems.length === 0) {
+    return allOption;
+  }
+
+  if (selectedItems.length <= 2) {
+    return selectedItems.join(', ');
+  }
+
+  return `${selectedItems.length} selecionados`;
 }
