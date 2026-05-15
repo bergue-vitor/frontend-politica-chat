@@ -178,6 +178,14 @@
   transform: scale(1);
 }
 
+.chat-provider-options .chat-filter-option input {
+  border-radius: 999px;
+}
+
+.chat-provider-options .chat-filter-option input::before {
+  border-radius: 999px;
+}
+
 .chat-filter-option span {
   min-width: 0;
   overflow: hidden;
