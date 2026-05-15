@@ -8,6 +8,14 @@ export const chatDepartments = [
   'Financeiro',
 ];
 
+export const chatSystems = [
+  'Todos os sistemas',
+  'Portal RH',
+  'Service Desk',
+  'Reembolso Online',
+  'Portal de Governança',
+];
+
 const departmentKnowledge: Record<string, { content: string; sources: ChatSource[] }> = {
   'Governança / RH': {
     content:
@@ -51,6 +59,49 @@ const departmentKnowledge: Record<string, { content: string; sources: ChatSource
   },
 };
 
+const systemKnowledge: Record<string, { content: string; sources: ChatSource[] }> = {
+  'Portal RH': {
+    content:
+      'Resposta filtrada para o Portal RH: a orientação considera solicitações de férias, benefícios, holerites, jornada e fluxos de atendimento aos colaboradores.',
+    sources: [
+      {
+        id: 'portal-rh-policy',
+        title: 'Manual de Uso do Portal RH.pdf',
+      },
+    ],
+  },
+  'Service Desk': {
+    content:
+      'Resposta filtrada para o Service Desk: a orientação considera abertura de chamados, priorização, SLA, suporte técnico e regras de atendimento interno.',
+    sources: [
+      {
+        id: 'service-desk-policy',
+        title: 'Política de Atendimento Service Desk.pdf',
+      },
+    ],
+  },
+  'Reembolso Online': {
+    content:
+      'Resposta filtrada para o Reembolso Online: a orientação considera envio de despesas, comprovantes, aprovações, limites e prazos de reembolso.',
+    sources: [
+      {
+        id: 'reembolso-online-policy',
+        title: 'Manual do Sistema de Reembolso Online.pdf',
+      },
+    ],
+  },
+  'Portal de Governança': {
+    content:
+      'Resposta filtrada para o Portal de Governança: a orientação considera normas corporativas, auditoria, aprovações e consulta de políticas internas.',
+    sources: [
+      {
+        id: 'governance-portal-policy',
+        title: 'Guia do Portal de Governança.pdf',
+      },
+    ],
+  },
+};
+
 const defaultKnowledge = {
   content:
     'Resposta considerando todos os departamentos: a orientação usa a base geral de políticas internas e pode combinar normas de RH, Financeiro, TI e Governança quando a pergunta envolver mais de uma área.',
@@ -62,6 +113,23 @@ const defaultKnowledge = {
   ],
 };
 
-export function getMockAssistantResponse(department: string) {
-  return departmentKnowledge[department] ?? defaultKnowledge;
+export function getMockAssistantResponse(departments: string[], systems: string[]) {
+  const selectedDepartments = departments.filter((department) => department !== chatDepartments[0]);
+  const selectedSystems = systems.filter((system) => system !== chatSystems[0]);
+  const departmentResponses = selectedDepartments
+    .map((department) => departmentKnowledge[department])
+    .filter(Boolean);
+  const systemResponses = selectedSystems
+    .map((system) => systemKnowledge[system])
+    .filter(Boolean);
+  const responses = [...departmentResponses, ...systemResponses];
+
+  if (responses.length > 0) {
+    return {
+      content: responses.map((response) => response.content).join('\n\n'),
+      sources: responses.flatMap((response) => response.sources),
+    };
+  }
+
+  return defaultKnowledge;
 }
