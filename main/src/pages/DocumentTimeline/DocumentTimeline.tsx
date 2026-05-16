@@ -4,13 +4,6 @@ import "./document-management.css";
 
 // ── Inline SVG icons ──────────────────────────────────────────────────────────
 
-const IconClock3 = ({ size = 16 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10" />
-    <polyline points="12 6 12 12 16.5 12" />
-  </svg>
-);
 
 const IconFileText = ({ size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
@@ -348,7 +341,7 @@ export default function DocumentManagement() {
     [documents, selectedDocumentId]
   );
 
-  const handleUpload = (title: string, category: string, file: File) => {
+  const handleUpload = (title: string, category: string) => {
     const newDoc: DocumentItem = {
       id: Date.now(),
       title,
