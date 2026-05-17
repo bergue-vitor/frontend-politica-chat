@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   ChevronDown,
@@ -26,24 +26,9 @@ const conversationHistory = [
 ];
 
 const sharedConversationHistory = [
-  {
-    id: 'shared-beneficios',
-    title: 'Benefícios e plano de saúde',
-    owner: 'Ana Souza',
-    updatedAt: 'Hoje',
-  },
-  {
-    id: 'shared-home-office',
-    title: 'Regras de home office',
-    owner: 'Carlos Oliveira',
-    updatedAt: 'Ontem',
-  },
-  {
-    id: 'shared-conduta',
-    title: 'Código de conduta interno',
-    owner: 'Marina Lima',
-    updatedAt: '12/05',
-  },
+  { id: 'shared-beneficios', title: 'Benefícios e plano de saúde', owner: 'Ana Souza', updatedAt: 'Hoje' },
+  { id: 'shared-home-office', title: 'Regras de home office', owner: 'Carlos Oliveira', updatedAt: 'Ontem' },
+  { id: 'shared-conduta', title: 'Código de conduta interno', owner: 'Marina Lima', updatedAt: '12/05' },
 ];
 
 export default function Sidebar() {
@@ -54,6 +39,23 @@ export default function Sidebar() {
   const [isMobile, setIsMobile] = useState(false);
   const [isConversationHistoryOpen, setIsConversationHistoryOpen] = useState(false);
   const [isSharedHistoryOpen, setIsSharedHistoryOpen] = useState(false);
+  const [conversationSearch, setConversationSearch] = useState('');
+  const [sharedSearch, setSharedSearch] = useState('');
+
+  const filteredConversationHistory = useMemo(() => {
+    const search = conversationSearch.trim().toLowerCase();
+    if (!search) return conversationHistory;
+    return conversationHistory.filter((item) => item.toLowerCase().includes(search));
+  }, [conversationSearch]);
+
+  const filteredSharedConversationHistory = useMemo(() => {
+    const search = sharedSearch.trim().toLowerCase();
+    if (!search) return sharedConversationHistory;
+
+    return sharedConversationHistory.filter((item) =>
+      `${item.title} ${item.owner} ${item.updatedAt}`.toLowerCase().includes(search)
+    );
+  }, [sharedSearch]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 900px)');
@@ -85,10 +87,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <aside
-        className={sidebarClassName}
-        aria-label="Navegação principal"
-      >
+      <aside className={sidebarClassName} aria-label="Navegação principal">
         <div className="sidebar-top-icons">
           <NavLink to="/chat" className="sidebar-brand" aria-label="Ir para o chat">
             <ShieldCheck size={20} strokeWidth={1.8} />
@@ -176,7 +175,6 @@ export default function Sidebar() {
               aria-expanded={isConversationHistoryOpen}
             >
               <span>Histórico de Conversas</span>
-
               {isConversationHistoryOpen ? (
                 <ChevronDown size={16} strokeWidth={1.8} />
               ) : (
@@ -185,14 +183,29 @@ export default function Sidebar() {
             </button>
 
             {isConversationHistoryOpen && (
-              <nav className="sidebar-history-list">
-                {conversationHistory.map((item) => (
-                  <NavLink to="/chat" className="sidebar-history-link" key={item}>
-                    <MessageSquare size={17} strokeWidth={1.8} />
-                    <span>{item}</span>
-                  </NavLink>
-                ))}
-              </nav>
+              <>
+                <label className="sidebar-history-search">
+                  <input
+                    type="search"
+                    placeholder="Buscar conversa"
+                    value={conversationSearch}
+                    onChange={(event) => setConversationSearch(event.target.value)}
+                  />
+                </label>
+
+                <nav className="sidebar-history-list">
+                  {filteredConversationHistory.map((item) => (
+                    <NavLink to="/chat" className="sidebar-history-link" key={item}>
+                      <MessageSquare size={17} strokeWidth={1.8} />
+                      <span>{item}</span>
+                    </NavLink>
+                  ))}
+                </nav>
+
+                {filteredConversationHistory.length === 0 && (
+                  <p className="sidebar-history-empty">Nenhuma conversa encontrada.</p>
+                )}
+              </>
             )}
           </section>
 
@@ -204,7 +217,6 @@ export default function Sidebar() {
               aria-expanded={isSharedHistoryOpen}
             >
               <span>Conversas Compartilhadas</span>
-
               {isSharedHistoryOpen ? (
                 <ChevronDown size={16} strokeWidth={1.8} />
               ) : (
@@ -213,22 +225,37 @@ export default function Sidebar() {
             </button>
 
             {isSharedHistoryOpen && (
-              <nav className="sidebar-history-list">
-                {sharedConversationHistory.map((item) => (
-                  <NavLink
-                    to={`/chat?shared=${item.id}`}
-                    className="sidebar-history-link sidebar-shared-history-link"
-                    key={item.id}
-                  >
-                    <Share2 size={17} strokeWidth={1.8} />
+              <>
+                <label className="sidebar-history-search">
+                  <input
+                    type="search"
+                    placeholder="Buscar compartilhada"
+                    value={sharedSearch}
+                    onChange={(event) => setSharedSearch(event.target.value)}
+                  />
+                </label>
 
-                    <span className="sidebar-shared-history-text">
-                      <strong>{item.title}</strong>
-                      <small>{item.owner} · {item.updatedAt}</small>
-                    </span>
-                  </NavLink>
-                ))}
-              </nav>
+                <nav className="sidebar-history-list">
+                  {filteredSharedConversationHistory.map((item) => (
+                    <NavLink
+                      to={`/chat?shared=${item.id}`}
+                      className="sidebar-history-link sidebar-shared-history-link"
+                      key={item.id}
+                    >
+                      <Share2 size={17} strokeWidth={1.8} />
+
+                      <span className="sidebar-shared-history-text">
+                        <strong>{item.title}</strong>
+                        <small>{item.owner} · {item.updatedAt}</small>
+                      </span>
+                    </NavLink>
+                  ))}
+                </nav>
+
+                {filteredSharedConversationHistory.length === 0 && (
+                  <p className="sidebar-history-empty">Nenhuma conversa compartilhada encontrada.</p>
+                )}
+              </>
             )}
           </section>
 
